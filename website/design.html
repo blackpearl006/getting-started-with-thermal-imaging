@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroDataHub - NIMHANS Node</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #F5F7FA;
+            --bg-secondary: #EBF0F5;
+            --bg-card: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #86868B;
+            --border-color: #D2D2D7;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --red: #FF3B30;
+            --green: #30D158;
+            --blue: #0A84FF;
+            --yellow: #FFD60A;
+            --orange: #FF9F0A;
+            --purple: #BF5AF2;
+            --accent: #007AFF;
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #000000;
+            --bg-secondary: #161616;
+            --bg-card: #1C1C1E;
+            --text-primary: #F5F5F7;
+            --text-secondary: #86868B;
+            --border-color: #38383A;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.8);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 64px;
+            padding-bottom: 32px;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+        
+        .header-left h1 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        
+        .header-left .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .pi-info {
+            text-align: right;
+        }
+        
+        .pi-label {
+            font-size: 0.6875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .pi-name {
+            font-size: 1.0625rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+        
+        .view-toggle, .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .view-toggle:hover, .theme-toggle:hover {
+            background: var(--border-color);
+        }
+        
+        .view-toggle svg, .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-secondary);
+        }
+        
+        .view-toggle.active svg {
+            fill: var(--accent);
+        }
+        
+        .dataset-card.restricted {
+            filter: blur(4px);
+            pointer-events: none;
+            position: relative;
+        }
+        
+        .dataset-card.restricted::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            filter: none;
+        }
+        
+        .otp-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            cursor: help;
+            transition: all 0.2s ease;
+        }
+        
+        .otp-toggle:hover {
+            background: var(--bg-card);
+            border-color: var(--accent);
+        }
+        
+        .otp-toggle-switch {
+            width: 32px;
+            height: 18px;
+            background: var(--border-color);
+            border-radius: 12px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .otp-toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .datasets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .dataset-card {
+            background: var(--bg-card);
+            border-radius: 18px;
+            padding: 32px;
+            border: 0.5px solid var(--border-color);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dataset-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .dataset-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent-color);
+        }
+        
+        .dataset-card:hover::before {
+            opacity: 1;
+        }
+        
+        .dataset-card.completed {
+            --accent-color: var(--green);
+        }
+        
+        .dataset-card.ongoing {
+            --accent-color: var(--orange);
+        }
+        
+        .dataset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+        
+        .dataset-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+            letter-spacing: -0.01em;
+        }
+        
+        .status-badge.completed {
+            background: rgba(48, 209, 88, 0.15);
+            color: var(--green);
+        }
+        
+        .status-badge.ongoing {
+            background: rgba(255, 159, 10, 0.15);
+            color: var(--orange);
+        }
+        
+        .dataset-focus {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 0.9375rem;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+        }
+        
+        .dataset-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: var(--bg-secondary);
+            padding: 14px 16px;
+            border-radius: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+            font-weight: 400;
+        }
+        
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+        
+        .progress-rings {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+        
+        .ring-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ring {
+            width: 90px;
+            height: 90px;
+            position: relative;
+        }
+        
+        .ring svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        
+        .ring-bg {
+            fill: none;
+            stroke: var(--bg-secondary);
+            stroke-width: 12;
+        }
+        
+        .ring-progress {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        
+        .ring-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 600;
+            font-size: 1.125rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .ring-caption {
+            font-size: 0.6875rem;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 90px;
+            line-height: 1.3;
+        }
+        
+        .qc-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(48, 209, 88, 0.12);
+            color: var(--green);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            margin-top: 12px;
+        }
+        
+        .compliance-badges {
+            display: flex;
+            gap: 8px;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge-neurobagel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .badge-nipoppy {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .badge-access {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .badge-access.public {
+            background: rgba(48, 209, 88, 0.15);
+            color: var(--green);
+            border-color: var(--green);
+        }
+        
+        .badge-access.institution {
+            background: rgba(255, 159, 10, 0.15);
+            color: var(--orange);
+            border-color: var(--orange);
+        }
+        
+        .access-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 16px;
+            text-decoration: none;
+            pointer-events: none;
+            opacity: 0.5;
+            margin-left: auto;
+        }
+        
+        .access-button:hover {
+            background: var(--accent);
+            transform: none;
+            box-shadow: none;
+            color: white;
+        }
+        
+        .access-button svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+        
+        .detail-view {
+            display: none;
+        }
+        
+        .detail-view.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-secondary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 32px;
+        }
+        
+        .back-button:hover {
+            background: var(--border-color);
+        }
+        
+        .detail-header {
+            margin-bottom: 48px;
+        }
+        
+        .detail-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+        }
+        
+        .detail-subtitle {
+            font-size: 1.0625rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+        
+        .metadata-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        
+        .metadata-chip {
+            background: var(--bg-secondary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .metadata-chip strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-bottom: 56px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+        
+        .section-description {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .param-card {
+            background: var(--bg-secondary);
+            border: 0.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .param-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 500;
+        }
+        
+        .param-value {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+        
+        .info-card {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .info-card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+        
+        .info-card-content {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .info-card-content strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .chart-card {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 220px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-size: 0.875rem;
+        }
+        
+        .viewer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+        
+        .viewer-card {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .viewer-placeholder {
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+        
+        .clinical-tests {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        
+        .test-card {
+            background: var(--bg-secondary);
+            border: 0.5px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-2px);
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+            border-color: var(--accent);
+        }
+        
+        .test-name {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+        
+        .test-description {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .papers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .paper-card {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .paper-card:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent);
+        }
+        
+        .paper-title {
+            font-size: 1.0625rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+        }
+        
+        .paper-authors {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 6px;
+        }
+        
+        .paper-journal {
+            color: var(--accent);
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+        
+        @media (max-width: 768px) {
+            .datasets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-left h1 {
+                font-size: 1.8rem;
+            }
+            
+            .charts-grid, .viewer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Dashboard -->
+        <div id="dashboard-view">
+            <header>
+                <div class="header-left">
+                    <h1>NeuroDataHub – NIMHANS Node</h1>
+                    <p class="subtitle">Neuroimaging Research Data Repository</p>
+                </div>
+                <div class="header-right">
+                    <div class="pi-info">
+                        <div class="pi-label">Principal Investigator</div>
+                        <div class="pi-name">Dr. Abharaman Linkcon</div>
+                    </div>
+                    <button class="view-toggle" onclick="toggleView()" title="Toggle Restricted/Public View">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                    </button>
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <svg id="theme-icon" viewBox="0 0 24 24">
+                            <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            
+            <div class="datasets-grid">
+                <!-- Dataset 1: ENIGMA-PA -->
+                <div class="dataset-card completed" onclick="showDetail('enigma')">
+                    <div class="compliance-badges">
+                        <div class="badge badge-neurobagel" title="Neurobagel Compliant: Semantic harmonization enabled">NB</div>
+                        <div class="badge badge-access public">Public</div>
+                    </div>
+                    <div class="dataset-header">
+                        <div>
+                            <h2 class="dataset-title">ENIGMA-PA</h2>
+                            <span class="status-badge completed">Completed</span>
+                        </div>
+                    </div>
+                    <p class="dataset-focus">Parkinson's Disease Structural MRI Consortium Study</p>
+                    <div class="dataset-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Participants</div>
+                            <div class="stat-value">342</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Modalities</div>
+                            <div class="stat-value">sMRI, DTI</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Data Analyzed</div>
+                            <div class="stat-value">100%</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Year</div>
+                            <div class="stat-value">2019-2023</div>
+                        </div>
+                    </div>
+                    <div class="qc-badge">
+                        ✓ Quality Control Validated
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <span class="access-button">
+                            <svg viewBox="0 0 24 24"><path d="M12.65 10C11.7 7.31 8.9 5.5 5.77 6.12c-2.29.46-4.15 2.29-4.63 4.58C.32 14.57 3.26 18 7 18c2.61 0 4.83-1.67 5.65-4H17v2c0 1.1.9 2 2 2s2-.9 2-2v-2c1.1 0 2-.9 2-2s-.9-2-2-2h-8.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                            Request Access
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Dataset 2: AD-Connect -->
+                <div class="dataset-card completed" onclick="showDetail('adconnect')">
+                    <div class="compliance-badges">
+                        <div class="badge badge-nipoppy" title="Nipoppy Organized: BIDS-compliant with processing tracking">NP</div>
+                        <div class="badge badge-access institution">Institution</div>
+                    </div>
+                    <div class="dataset-header">
+                        <div>
+                            <h2 class="dataset-title">AD-Connect</h2>
+                            <span class="status-badge completed">Completed</span>
+                        </div>
+                    </div>
+                    <p class="dataset-focus">Alzheimer's Disease Multimodal Biomarker Study</p>
+                    <div class="dataset-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Participants</div>
+                            <div class="stat-value">512</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Modalities</div>
+                            <div class="stat-value">PET, MRI</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Data Analyzed</div>
+                            <div class="stat-value">100%</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Year</div>
+                            <div class="stat-value">2018-2023</div>
+                        </div>
+                    </div>
+                    <div class="qc-badge">
+                        ✓ Quality Control Validated
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <span class="access-button">
+                            <svg viewBox="0 0 24 24"><path d="M12.65 10C11.7 7.31 8.9 5.5 5.77 6.12c-2.29.46-4.15 2.29-4.63 4.58C.32 14.57 3.26 18 7 18c2.61 0 4.83-1.67 5.65-4H17v2c0 1.1.9 2 2 2s2-.9 2-2v-2c1.1 0 2-.9 2-2s-.9-2-2-2h-8.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                            Request Access
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Dataset 3: InfantBrain -->
+                <div class="dataset-card ongoing" onclick="showDetail('infantbrain')">
+                    <div class="compliance-badges">
+                        <div class="badge badge-neurobagel" title="Neurobagel Compliant: Semantic harmonization enabled">NB</div>
+                        <div class="badge badge-nipoppy" title="Nipoppy Organized: BIDS-compliant with processing tracking">NP</div>
+                        <div class="badge badge-access public">Public</div>
+                    </div>
+                    <div class="dataset-header">
+                        <div>
+                            <h2 class="dataset-title">InfantBrain</h2>
+                            <span class="status-badge ongoing">Ongoing</span>
+                        </div>
+                    </div>
+                    <p class="dataset-focus">Early Neurodevelopment Longitudinal Imaging Study</p>
+                    <div class="progress-rings">
+                        <div class="ring-container">
+                            <div class="ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                                    <circle class="ring-progress" cx="60" cy="60" r="48" 
+                                            style="stroke: #FF3B30; stroke-dasharray: 301.59; stroke-dashoffset: 120.64;"/>
+                                </svg>
+                                <div class="ring-label">130</div>
+                            </div>
+                            <div class="ring-caption">Collected (Target: 200)</div>
+                        </div>
+                        <div class="ring-container">
+                            <div class="ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                                    <circle class="ring-progress" cx="60" cy="60" r="48" 
+                                            style="stroke: #34C759; stroke-dasharray: 301.59; stroke-dashoffset: 173.42;"/>
+                                </svg>
+                                <div class="ring-label">85</div>
+                            </div>
+                            <div class="ring-caption">MRIQC Complete</div>
+                        </div>
+                        <div class="ring-container">
+                            <div class="ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                                    <circle class="ring-progress" cx="60" cy="60" r="48" 
+                                            style="stroke: #007AFF; stroke-dasharray: 301.59; stroke-dashoffset: 196.03;"/>
+                                </svg>
+                                <div class="ring-label">70</div>
+                            </div>
+                            <div class="ring-caption">Clinical Testing</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <span class="access-button">
+                            <svg viewBox="0 0 24 24"><path d="M12.65 10C11.7 7.31 8.9 5.5 5.77 6.12c-2.29.46-4.15 2.29-4.63 4.58C.32 14.57 3.26 18 7 18c2.61 0 4.83-1.67 5.65-4H17v2c0 1.1.9 2 2 2s2-.9 2-2v-2c1.1 0 2-.9 2-2s-.9-2-2-2h-8.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                            Request to Collaborate
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Dataset 4: PD-Longitudinal -->
+                <div class="dataset-card ongoing" onclick="showDetail('pdlong')">
+                    <div class="compliance-badges">
+                        <div class="badge badge-nipoppy" title="Nipoppy Organized: BIDS-compliant with processing tracking">NP</div>
+                        <div class="badge badge-access institution">Institution</div>
+                    </div>
+                    <div class="dataset-header">
+                        <div>
+                            <h2 class="dataset-title">PD-Longitudinal</h2>
+                            <span class="status-badge ongoing">Ongoing</span>
+                        </div>
+                    </div>
+                    <p class="dataset-focus">Parkinson's Disease 5-Year Follow-up Cohort</p>
+                    <div class="progress-rings">
+                        <div class="ring-container">
+                            <div class="ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                                    <circle class="ring-progress" cx="60" cy="60" r="48" 
+                                            style="stroke: #007AFF; stroke-dasharray: 301.59; stroke-dashoffset: 90.48;"/>
+                                </svg>
+                                <div class="ring-label">210</div>
+                            </div>
+                            <div class="ring-caption">Collected (Target: 300)</div>
+                        </div>
+                        <div class="ring-container">
+                            <div class="ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                                    <circle class="ring-progress" cx="60" cy="60" r="48" 
+                                            style="stroke: #34C759; stroke-dasharray: 301.59; stroke-dashoffset: 110.58;"/>
+                                </svg>
+                                <div class="ring-label">190</div>
+                            </div>
+                            <div class="ring-caption">MRIQC Complete</div>
+                        </div>
+                        <div class="ring-container">
+                            <div class="ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                                    <circle class="ring-progress" cx="60" cy="60" r="48" 
+                                            style="stroke: #AF52DE; stroke-dasharray: 301.59; stroke-dashoffset: 150.80;"/>
+                                </svg>
+                                <div class="ring-label">150</div>
+                            </div>
+                            <div class="ring-caption">PET Imaging</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <span class="access-button">
+                            <svg viewBox="0 0 24 24"><path d="M12.65 10C11.7 7.31 8.9 5.5 5.77 6.12c-2.29.46-4.15 2.29-4.63 4.58C.32 14.57 3.26 18 7 18c2.61 0 4.83-1.67 5.65-4H17v2c0 1.1.9 2 2 2s2-.9 2-2v-2c1.1 0 2-.9 2-2s-.9-2-2-2h-8.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                            Request to Collaborate
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detail Views -->
+        <div id="enigma-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                ← Back to Dashboard
+            </button>
+            
+            <div class="detail-header">
+                <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            <h1 class="detail-title" style="margin-bottom: 0;">ENIGMA-PA</h1>
+                            <div class="badge badge-neurobagel">NEUROBAGEL</div>
+                            <div class="badge badge-access public">PUBLIC</div>
+                        </div>
+                        <p class="detail-subtitle">Parkinson's Disease Structural MRI Consortium Study</p>
+                        <div class="metadata-row">
+                            <div class="metadata-chip"><strong>Year:</strong> 2019-2023</div>
+                            <div class="metadata-chip"><strong>Data Sharing:</strong> Qualified Researchers</div>
+                            <div class="metadata-chip"><strong>PI:</strong> Dr. Abharaman Linkcon</div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <div class="otp-toggle" title="Future feature: OTP-based institutional access control will be enabled">
+                                <span style="font-size: 0.75rem;">🔐 OTP Access Control</span>
+                                <div class="otp-toggle-switch"></div>
+                                <span style="color: var(--text-secondary);">(Coming Soon)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="access-button" style="margin-top: 0;">
+                        <svg viewBox="0 0 24 24"><path d="M12.65 10C11.7 7.31 8.9 5.5 5.77 6.12c-2.29.46-4.15 2.29-4.63 4.58C.32 14.57 3.26 18 7 18c2.61 0 4.83-1.67 5.65-4H17v2c0 1.1.9 2 2 2s2-.9 2-2v-2c1.1 0 2-.9 2-2s-.9-2-2-2h-8.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                        Request Access
+                    </span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Study Overview</h2>
+                <p class="section-description">
+                    The ENIGMA-Parkinson's study is a large-scale international collaboration examining structural brain changes in Parkinson's disease. This dataset includes high-resolution T1-weighted MRI scans and diffusion tensor imaging from 342 participants across 12 sites. The study aims to identify reproducible patterns of gray matter atrophy and white matter changes associated with PD progression and cognitive decline.
+                </p>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-title">Inclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Idiopathic PD diagnosis per UK Brain Bank criteria<br>
+                            • Age 40-85 years<br>
+                            • Hoehn & Yahr stage 1-4<br>
+                            • MRI-compatible<br>
+                            • Stable dopaminergic therapy (≥4 weeks)
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Exclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Atypical parkinsonian syndromes (PSP, MSA, CBD)<br>
+                            • Major psychiatric disorder<br>
+                            • Substance abuse (past 12 months)<br>
+                            • Major stroke or CNS infection<br>
+                            • Deep brain stimulation at baseline
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Imaging Protocol</div>
+                        <div class="info-card-content">
+                            <strong>Scanner:</strong> 3T Siemens/GE/Philips<br>
+                            <strong>T1-MPRAGE:</strong> 1mm³ isotropic, 5min<br>
+                            <strong>DTI:</strong> 64 directions, b=1000 s/mm², 10min<br>
+                            <strong>QC:</strong> MRIQC + manual review<br>
+                            <strong>Harmonization:</strong> ComBat for site effects
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Biomarkers</div>
+                        <div class="info-card-content">
+                            <strong>Genetics:</strong> LRRK2, GBA, SNCA sequencing<br>
+                            <strong>CSF:</strong> α-synuclein, p-tau (subset)<br>
+                            <strong>Motor:</strong> MDS-UPDRS-III off/on medication<br>
+                            <strong>Cognitive:</strong> MoCA, detailed neuropsych battery
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Key Parameters</h2>
+                <div class="overview-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Participants</div>
+                        <div class="param-value">342</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Study Duration</div>
+                        <div class="param-value">4 years</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Imaging Sites</div>
+                        <div class="param-value">12</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Mean Age</div>
+                        <div class="param-value">64.3 yrs</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Disease Duration</div>
+                        <div class="param-value">7.2 ± 4.1 yrs</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">H&Y Stage</div>
+                        <div class="param-value">2.1 ± 0.8</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Demographics</h2>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Age at Baseline</h3>
+                        <div class="chart-placeholder">Histogram: 40-85 years (mean: 64.3±9.2)</div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Gender Distribution</h3>
+                        <div class="chart-placeholder">Donut Chart: 62% Male / 38% Female</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Neuroimaging Data</h2>
+                <div class="viewer-grid">
+                    <div class="viewer-card">
+                        <h3 class="chart-title">T1-Weighted MRI Viewer</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: Structural MRI</div>
+                    </div>
+                    <div class="viewer-card">
+                        <h3 class="chart-title">DTI Tractography Viewer</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: Diffusion Tensor Imaging</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Clinical Assessments</h2>
+                <div class="clinical-tests">
+                    <a href="https://www.movementdisorders.org/MDS/MDS-Rating-Scales/MDS-Unified-Parkinsons-Disease-Rating-Scale-MDS-UPDRS.htm" target="_blank" class="test-card">
+                        <div class="test-name">MDS-UPDRS-III</div>
+                        <div class="test-description">Motor Examination</div>
+                    </a>
+                    <a href="https://www.parkinsons.va.gov/resources/UPDRS.asp" target="_blank" class="test-card">
+                        <div class="test-name">H&Y Scale</div>
+                        <div class="test-description">Disease Staging</div>
+                    </a>
+                    <a href="https://www.mocatest.org/" target="_blank" class="test-card">
+                        <div class="test-name">MoCA</div>
+                        <div class="test-description">Cognitive Screening</div>
+                    </a>
+                    <a href="https://eprovide.mapi-trust.org/instruments/parkinson-s-disease-questionnaire" target="_blank" class="test-card">
+                        <div class="test-name">PDQ-39</div>
+                        <div class="test-description">Quality of Life</div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Research Outputs</h2>
+                <div class="papers-list">
+                    <div class="paper-card">
+                        <div class="paper-title">Cortical thickness patterns predict cognitive decline in Parkinson's disease</div>
+                        <div class="paper-authors">Linkcon A., et al. (2024)</div>
+                        <div class="paper-journal">Brain · Impact Factor: 15.2</div>
+                    </div>
+                    <div class="paper-card">
+                        <div class="paper-title">White matter microstructure alterations and motor progression in early PD</div>
+                        <div class="paper-authors">Sharma R., Linkcon A., et al. (2023)</div>
+                        <div class="paper-journal">Movement Disorders · Impact Factor: 9.7</div>
+                    </div>
+                    <div class="paper-card">
+                        <div class="paper-title">Harmonization of multi-site structural MRI in the ENIGMA-PD consortium</div>
+                        <div class="paper-authors">ENIGMA-PD Working Group (2023)</div>
+                        <div class="paper-journal">NeuroImage · Impact Factor: 7.4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AD-Connect Detail -->
+        <div id="adconnect-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                ← Back to Dashboard
+            </button>
+            
+            <div class="detail-header">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h1 class="detail-title">AD-Connect</h1>
+                        <p class="detail-subtitle">Alzheimer's Disease Multimodal Biomarker Study</p>
+                        <div class="metadata-row">
+                            <div class="metadata-chip"><strong>IRB:</strong> NIMH-2018-156</div>
+                            <div class="metadata-chip"><strong>ClinicalTrials.gov:</strong> NCT03712345</div>
+                            <div class="metadata-chip"><strong>Data Sharing:</strong> Open Access (ADNI Model)</div>
+                            <div class="metadata-chip"><strong>PI:</strong> Dr. Abharaman Linkcon</div>
+                        </div>
+                    </div>
+                    <span class="access-button" style="margin-top: 0;">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        Request Access
+                    </span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Study Overview</h2>
+                <p class="section-description">
+                    AD-Connect is a comprehensive multimodal study investigating biomarkers of Alzheimer's disease progression. The dataset includes amyloid and tau PET imaging, structural MRI, comprehensive neuropsychological testing, CSF biomarkers, and plasma p-tau from 512 participants spanning the AD continuum from cognitively normal to mild dementia.
+                </p>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-title">Inclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Age 55-90 years<br>
+                            • Study partner available for assessments<br>
+                            • CDR 0, 0.5, or 1<br>
+                            • Willing to undergo lumbar puncture<br>
+                            • Adequate visual/auditory acuity
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Exclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Non-AD dementia etiology<br>
+                            • Major psychiatric disorder (active)<br>
+                            • Significant neurological disease<br>
+                            • Contraindication to MRI or lumbar puncture<br>
+                            • Unstable medical conditions
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Imaging Protocol</div>
+                        <div class="info-card-content">
+                            <strong>Amyloid PET:</strong> [18F]Florbetapir (50min p.i.)<br>
+                            <strong>Tau PET:</strong> [18F]Flortaucipir (80-100min p.i.)<br>
+                            <strong>MRI:</strong> 3T MPRAGE + FLAIR + DTI + rs-fMRI<br>
+                            <strong>QC:</strong> Centiloid calibration, SUVr normalization
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Biomarkers</div>
+                        <div class="info-card-content">
+                            <strong>CSF:</strong> Aβ42/40, p-tau181, t-tau (Elecsys)<br>
+                            <strong>Plasma:</strong> p-tau217, NfL, GFAP (Simoa)<br>
+                            <strong>Genetics:</strong> APOE genotyping, PRS available<br>
+                            <strong>Cognitive:</strong> ADAS-Cog, extensive neuropsych
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Key Parameters</h2>
+                <div class="overview-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Participants</div>
+                        <div class="param-value">512</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Study Duration</div>
+                        <div class="param-value">5 years</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Follow-up Visits</div>
+                        <div class="param-value">Annual</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Mean Age</div>
+                        <div class="param-value">71.8 yrs</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">APOE ε4+</div>
+                        <div class="param-value">43%</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Amyloid PET+</div>
+                        <div class="param-value">58%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Demographics</h2>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Age at Baseline</h3>
+                        <div class="chart-placeholder">Histogram: 55-90 years (mean: 71.8±8.4)</div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Gender Distribution</h3>
+                        <div class="chart-placeholder">Donut Chart: 48% Male / 52% Female</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Neuroimaging Data</h2>
+                <div class="viewer-grid">
+                    <div class="viewer-card">
+                        <h3 class="chart-title">Amyloid PET Viewer</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: [18F]Florbetapir PET</div>
+                    </div>
+                    <div class="viewer-card">
+                        <h3 class="chart-title">Tau PET Viewer</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: [18F]Flortaucipir PET</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Clinical Assessments</h2>
+                <div class="clinical-tests">
+                    <a href="https://eprovide.mapi-trust.org/instruments/alzheimer-s-disease-assessment-scale-cognitive-subscale" target="_blank" class="test-card">
+                        <div class="test-name">ADAS-Cog</div>
+                        <div class="test-description">AD Assessment Scale</div>
+                    </a>
+                    <a href="https://knightadrc.wustl.edu/professionals-clinicians/cdr-dementia-staging-instrument/" target="_blank" class="test-card">
+                        <div class="test-name">CDR</div>
+                        <div class="test-description">Dementia Rating</div>
+                    </a>
+                    <a href="https://www.mocatest.org/" target="_blank" class="test-card">
+                        <div class="test-name">MoCA</div>
+                        <div class="test-description">Cognitive Screening</div>
+                    </a>
+                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3022748/" target="_blank" class="test-card">
+                        <div class="test-name">RAVLT</div>
+                        <div class="test-description">Memory Assessment</div>
+                    </a>
+                    <a href="https://www.mdapp.co/neuropsychiatric-inventory-npi-calculator-449/" target="_blank" class="test-card">
+                        <div class="test-name">NPI</div>
+                        <div class="test-description">Neuropsychiatric</div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Research Outputs</h2>
+                <div class="papers-list">
+                    <div class="paper-card">
+                        <div class="paper-title">Tau PET patterns predict cognitive decline independent of amyloid burden</div>
+                        <div class="paper-authors">Linkcon A., Kumar S., et al. (2024)</div>
+                        <div class="paper-journal">Alzheimer's & Dementia · Impact Factor: 16.6</div>
+                    </div>
+                    <div class="paper-card">
+                        <div class="paper-title">Regional tau spreading pathways in early Alzheimer's disease</div>
+                        <div class="paper-authors">Reddy M., Linkcon A., et al. (2024)</div>
+                        <div class="paper-journal">Nature Neuroscience · Impact Factor: 25.8</div>
+                    </div>
+                    <div class="paper-card">
+                        <div class="paper-title">Multimodal biomarkers for prediction of conversion from MCI to dementia</div>
+                        <div class="paper-authors">Linkcon A., et al. (2023)</div>
+                        <div class="paper-journal">JAMA Neurology · Impact Factor: 20.4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- InfantBrain Detail -->
+        <div id="infantbrain-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                ← Back to Dashboard
+            </button>
+            
+            <div class="detail-header">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h1 class="detail-title">InfantBrain</h1>
+                        <p class="detail-subtitle">Early Neurodevelopment Longitudinal Imaging Study</p>
+                        <div class="metadata-row">
+                            <div class="metadata-chip"><strong>IRB:</strong> NIMH-2022-789</div>
+                            <div class="metadata-chip"><strong>ClinicalTrials.gov:</strong> NCT05234567</div>
+                            <div class="metadata-chip"><strong>Status:</strong> Ongoing Recruitment</div>
+                            <div class="metadata-chip"><strong>PI:</strong> Dr. Abharaman Linkcon</div>
+                        </div>
+                    </div>
+                    <span class="access-button" style="margin-top: 0;">
+                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Request to Collaborate
+                    </span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Study Overview</h2>
+                <p class="section-description">
+                    InfantBrain is an ongoing longitudinal study examining typical and atypical brain development from birth through 24 months. The study employs natural sleep MRI protocols optimized for infant imaging to capture developmental trajectories of brain structure, connectivity, and myelination during critical periods of early neurodevelopment. Current enrollment: 130 of 200 target participants.
+                </p>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-title">Inclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Singleton birth ≥37 weeks gestation<br>
+                            • Birth weight ≥2500g<br>
+                            • No major medical complications<br>
+                            • English or Kannada speaking family<br>
+                            • Willing to complete 5 timepoints (0-24mo)
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Exclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Genetic syndromes or chromosomal abnormalities<br>
+                            • Significant prenatal drug/alcohol exposure<br>
+                            • Major congenital anomalies<br>
+                            • MRI contraindications (metal implants)<br>
+                            • NICU stay >7 days
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Imaging Protocol</div>
+                        <div class="info-card-content">
+                            <strong>Scanner:</strong> 3T Siemens Prisma, 32-ch head coil<br>
+                            <strong>T2-TSE:</strong> 0.8mm³ isotropic (4min)<br>
+                            <strong>dMRI:</strong> 60 directions, b=1000 s/mm² (8min)<br>
+                            <strong>Method:</strong> Natural sleep (feed & swaddle)<br>
+                            <strong>Timepoints:</strong> 0, 3, 6, 12, 24 months
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Biomarkers</div>
+                        <div class="info-card-content">
+                            <strong>Developmental:</strong> Bayley-III at 6, 12, 24mo<br>
+                            <strong>Motor:</strong> AIMS at each scan visit<br>
+                            <strong>Social:</strong> M-CHAT-R/F at 18, 24mo<br>
+                            <strong>Parental:</strong> ASQ monthly via mobile app
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Key Parameters</h2>
+                <div class="overview-grid">
+                    <div class="param-card">
+                        <div class="param-label">Enrolled</div>
+                        <div class="param-value">130/200</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Study Duration</div>
+                        <div class="param-value">Ongoing</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Scan Timepoints</div>
+                        <div class="param-value">5</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Age Range</div>
+                        <div class="param-value">0-24 mo</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Success Rate</div>
+                        <div class="param-value">85% QC pass</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Scan Duration</div>
+                        <div class="param-value">25-35 min</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Demographics</h2>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Age at Enrollment</h3>
+                        <div class="chart-placeholder">Histogram: 0-6 months (mean: 2.3±1.8 weeks)</div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Gender Distribution</h3>
+                        <div class="chart-placeholder">Donut Chart: 55% Male / 45% Female</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Neuroimaging Data</h2>
+                <div class="viewer-grid">
+                    <div class="viewer-card">
+                        <h3 class="chart-title">Infant T2-Weighted MRI</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: Neonatal T2 MRI</div>
+                    </div>
+                    <div class="viewer-card">
+                        <h3 class="chart-title">Diffusion MRI</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: dMRI & Tractography</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Developmental Assessments</h2>
+                <div class="clinical-tests">
+                    <a href="https://www.pearsonclinical.com/childhood/products/100000123/bayley-scales-of-infant-and-toddler-development-third-edition-bayley-iii.html" target="_blank" class="test-card">
+                        <div class="test-name">Bayley-III</div>
+                        <div class="test-description">Development Scale</div>
+                    </a>
+                    <a href="https://agesandstages.com/" target="_blank" class="test-card">
+                        <div class="test-name">ASQ-3</div>
+                        <div class="test-description">Ages & Stages</div>
+                    </a>
+                    <a href="https://mchatscreen.com/" target="_blank" class="test-card">
+                        <div class="test-name">M-CHAT-R/F</div>
+                        <div class="test-description">Autism Screening</div>
+                    </a>
+                    <a href="https://www.alberta-infant-motor-scale.com/" target="_blank" class="test-card">
+                        <div class="test-name">AIMS</div>
+                        <div class="test-description">Motor Development</div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Ongoing Analyses</h2>
+                <div class="papers-list">
+                    <div class="paper-card">
+                        <div class="paper-title">Growth trajectories of cortical surface area in the first year</div>
+                        <div class="paper-authors">In preparation · 65 participants analyzed</div>
+                        <div class="paper-journal">Target: Cerebral Cortex</div>
+                    </div>
+                    <div class="paper-card">
+                        <div class="paper-title">White matter maturation patterns and motor milestone achievement</div>
+                        <div class="paper-authors">Data collection phase · 85 scans QC-passed</div>
+                        <div class="paper-journal">Target: Developmental Science</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PD-Longitudinal Detail -->
+        <div id="pdlong-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                ← Back to Dashboard
+            </button>
+            
+            <div class="detail-header">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h1 class="detail-title">PD-Longitudinal</h1>
+                        <p class="detail-subtitle">Parkinson's Disease 5-Year Progression Cohort</p>
+                        <div class="metadata-row">
+                            <div class="metadata-chip"><strong>IRB:</strong> NIMH-2021-445</div>
+                            <div class="metadata-chip"><strong>ClinicalTrials.gov:</strong> NCT04889123</div>
+                            <div class="metadata-chip"><strong>Status:</strong> Active Enrollment</div>
+                            <div class="metadata-chip"><strong>PI:</strong> Dr. Abharaman Linkcon</div>
+                        </div>
+                    </div>
+                    <span class="access-button" style="margin-top: 0;">
+                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Request to Collaborate
+                    </span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Study Overview</h2>
+                <p class="section-description">
+                    PD-Longitudinal is a prospective study tracking disease progression in early Parkinson's disease through annual multimodal assessments including structural MRI, dopamine transporter PET, comprehensive motor and cognitive testing, and wearable sensor monitoring. The study aims to identify imaging and digital biomarkers predictive of motor and cognitive decline trajectories, with particular focus on subtypes and progression heterogeneity. Current enrollment: 210 of 300 target participants.
+                </p>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-title">Inclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Idiopathic PD (UK Brain Bank criteria)<br>
+                            • Disease duration ≤5 years<br>
+                            • Age 45-80 years at enrollment<br>
+                            • Hoehn & Yahr stage 1-2.5<br>
+                            • Stable medications or de novo
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Exclusion Criteria</div>
+                        <div class="info-card-content">
+                            • Atypical parkinsonism (PSP, MSA, CBD, DLB)<br>
+                            • Secondary parkinsonism (drug, vascular)<br>
+                            • Major psychiatric comorbidity<br>
+                            • Significant cognitive impairment (MMSE <24)<br>
+                            • DBS or ablative surgery
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Imaging Protocol</div>
+                        <div class="info-card-content">
+                            <strong>MRI:</strong> 3T T1/T2/FLAIR/DTI/rs-fMRI<br>
+                            <strong>DAT-SPECT:</strong> [123I]FP-CIT imaging<br>
+                            <strong>QC:</strong> MRIQC + visual QC by radiologist<br>
+                            <strong>Harmonization:</strong> ComBat for multi-site<br>
+                            <strong>Frequency:</strong> Baseline + annual
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Biomarkers</div>
+                        <div class="info-card-content">
+                            <strong>Genetics:</strong> GBA, LRRK2, SNCA screening<br>
+                            <strong>Digital:</strong> Actigraphy, gait analysis, voice<br>
+                            <strong>Motor:</strong> MDS-UPDRS on/off meds<br>
+                            <strong>Cognitive:</strong> MoCA, PD-CRS comprehensive
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Key Parameters</h2>
+                <div class="overview-grid">
+                    <div class="param-card">
+                        <div class="param-label">Enrolled</div>
+                        <div class="param-value">210/300</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Study Duration</div>
+                        <div class="param-value">5 years</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Follow-up</div>
+                        <div class="param-value">Annual</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Mean Age</div>
+                        <div class="param-value">62.5 yrs</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Disease Duration</div>
+                        <div class="param-value">2.8 ± 1.6 yrs</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">DAT Scans</div>
+                        <div class="param-value">150 complete</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Demographics</h2>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Age at Baseline</h3>
+                        <div class="chart-placeholder">Histogram: 45-80 years (mean: 62.5±9.1)</div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Gender Distribution</h3>
+                        <div class="chart-placeholder">Donut Chart: 58% Male / 42% Female</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Neuroimaging Data</h2>
+                <div class="viewer-grid">
+                    <div class="viewer-card">
+                        <h3 class="chart-title">T1-Weighted MRI</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: Structural MRI</div>
+                    </div>
+                    <div class="viewer-card">
+                        <h3 class="chart-title">Dopamine Transporter SPECT</h3>
+                        <div class="viewer-placeholder">niiVue Viewer: [123I]FP-CIT SPECT</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Clinical Assessments</h2>
+                <div class="clinical-tests">
+                    <a href="https://www.movementdisorders.org/MDS/MDS-Rating-Scales/MDS-Unified-Parkinsons-Disease-Rating-Scale-MDS-UPDRS.htm" target="_blank" class="test-card">
+                        <div class="test-name">MDS-UPDRS</div>
+                        <div class="test-description">Comprehensive Motor</div>
+                    </a>
+                    <a href="https://www.mocatest.org/" target="_blank" class="test-card">
+                        <div class="test-name">MoCA</div>
+                        <div class="test-description">Cognitive Screening</div>
+                    </a>
+                    <a href="https://www.parkinsons.va.gov/resources/UPDRS.asp" target="_blank" class="test-card">
+                        <div class="test-name">H&Y Stage</div>
+                        <div class="test-description">Disease Staging</div>
+                    </a>
+                    <a href="https://eprovide.mapi-trust.org/instruments/parkinson-s-disease-questionnaire" target="_blank" class="test-card">
+                        <div class="test-name">PDQ-39</div>
+                        <div class="test-description">Quality of Life</div>
+                    </a>
+                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3983127/" target="_blank" class="test-card">
+                        <div class="test-name">SCOPA-AUT</div>
+                        <div class="test-description">Autonomic Function</div>
+                    </a>
+                    <a href="https://www.rbdsq.org/" target="_blank" class="test-card">
+                        <div class="test-name">RBDSQ</div>
+                        <div class="test-description">REM Sleep Behavior</div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Ongoing Analyses</h2>
+                <div class="papers-list">
+                    <div class="paper-card">
+                        <div class="paper-title">Longitudinal striatal dopamine loss and motor progression trajectories</div>
+                        <div class="paper-authors">Data collection phase · 150 baseline DAT scans complete</div>
+                        <div class="paper-journal">Target: Movement Disorders</div>
+                    </div>
+                    <div class="paper-card">
+                        <div class="paper-title">Baseline cortical thickness predicts cognitive decline in early PD</div>
+                        <div class="paper-authors">Preliminary analysis · 190 scans processed</div>
+                        <div class="paper-journal">Target: Brain</div>
+                    </div>
+                    <div class="paper-card">
+                        <div class="paper-title">Quantitative gait features as digital biomarkers of progression</div>
+                        <div class="paper-authors">Ongoing data collection · 210 baseline assessments</div>
+                        <div class="paper-journal">Target: NPJ Digital Medicine</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update icon
+            const icon = document.getElementById('theme-icon');
+            if (newTheme === 'dark') {
+                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+            } else {
+                icon.innerHTML = '<path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>';
+            }
+        }
+        
+        // View toggle (restricted/public)
+        let restrictedViewActive = false;
+        function toggleView() {
+            restrictedViewActive = !restrictedViewActive;
+            const cards = document.querySelectorAll('.dataset-card');
+            const toggleButton = document.querySelector('.view-toggle');
+            
+            cards.forEach((card, index) => {
+                // Make index 1 (AD-Connect) and 3 (PD-Longitudinal) restricted
+                if ((index === 1 || index === 3) && restrictedViewActive) {
+                    card.classList.add('restricted');
+                } else {
+                    card.classList.remove('restricted');
+                }
+            });
+            
+            if (restrictedViewActive) {
+                toggleButton.classList.add('active');
+            } else {
+                toggleButton.classList.remove('active');
+            }
+        }
+        
+        // Set initial theme to dark
+        document.body.setAttribute('data-theme', 'dark');
+        
+        // Navigation
+        function showDetail(dataset) {
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById(dataset + '-detail').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        
+        function showDashboard() {
+            document.querySelectorAll('.detail-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById('dashboard-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+        
+        // Animate progress rings on load
+        window.addEventListener('load', () => {
+            const rings = document.querySelectorAll('.ring-progress');
+            rings.forEach(ring => {
+                const offset = ring.style.strokeDashoffset;
+                ring.style.strokeDashoffset = '301.59';
+                setTimeout(() => {
+                    ring.style.strokeDashoffset = offset;
+                }, 100);
+            });
+        });
+        
+        // Add hover tooltips for progress rings
+        document.querySelectorAll('.ring-container').forEach(container => {
+            container.addEventListener('mouseenter', (e) => {
+                const caption = container.querySelector('.ring-caption').textContent;
+                const label = container.querySelector('.ring-label').textContent;
+                
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = `${label} - ${caption}`;
+                tooltip.style.opacity = '1';
+                
+                document.body.appendChild(tooltip);
+                
+                const rect = container.getBoundingClientRect();
+                tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+                tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+                tooltip.style.position = 'fixed';
+                
+                container._tooltip = tooltip;
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                if (container._tooltip) {
+                    container._tooltip.remove();
+                    container._tooltip = null;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
