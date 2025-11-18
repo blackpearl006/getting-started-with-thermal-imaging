@@ -1,0 +1,247 @@
+{
+  "id": "dmrir",
+  "title": "DMR-IR",
+  "subtitle": "Database for Mastology Research - Infrared",
+  "category": "medical-breast",
+  "card": {
+    "description": "The most widely used public breast thermography dataset with dynamic infrared imaging protocol.\nIncludes clinical data, mammograms, and ROI masks from 293 patients.\n",
+    "stats": [
+      {
+        "label": "Images",
+        "value": "5,860+"
+      },
+      {
+        "label": "Patients",
+        "value": "293"
+      },
+      {
+        "label": "Protocol",
+        "value": "DIT"
+      }
+    ],
+    "tags": [
+      "Breast Cancer",
+      "Dynamic Thermography",
+      "Clinical Data",
+      "FLIR SC-620"
+    ],
+    "links": {
+      "primary": {
+        "text": "Access Dataset",
+        "url": "https://visual.ic.uff.br/dmi/"
+      },
+      "secondary": {
+        "text": "View Details",
+        "action": "show-detail"
+      }
+    }
+  },
+  "detail": {
+    "header": {
+      "badges": [
+        {
+          "type": "medical",
+          "text": "Medical - Breast Cancer"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Institution",
+          "value": "Federal University Fluminense, Brazil"
+        },
+        {
+          "label": "Year Released",
+          "value": "2012"
+        },
+        {
+          "label": "License",
+          "value": "Ethics Committee Approved"
+        },
+        {
+          "label": "Access",
+          "value": "Public"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "type": "overview",
+        "title": "Overview",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "The DMR-IR (Database for Mastology Research - Infrared) is the most widely used public breast thermography\ndataset in research, utilized in 77% of studies in recent surveys. It represents the gold standard for\nbreast cancer thermography research and has been instrumental in advancing computer-aided diagnosis systems.\n"
+          },
+          {
+            "type": "paragraph",
+            "text": "The dataset was created by the Visual Lab at the Federal University Fluminense in collaboration with\nHospital Universitario Antonio Pedro (HUAP). It has been approved by the Research Ethics Committee\nand registered with the Brazilian Ministry of Health under number CAAE: 01042812.0.0000.5243.\n"
+          },
+          {
+            "type": "highlight",
+            "text": "**Key Achievement:** Studies using this dataset have achieved up to 100% accuracy\nin distinguishing between healthy and abnormal breast tissue using machine learning approaches\nwith dynamic thermography protocols.\n"
+          }
+        ]
+      },
+      {
+        "type": "specifications",
+        "title": "Dataset Specifications",
+        "params": [
+          {
+            "label": "Total Patients",
+            "value": "293"
+          },
+          {
+            "label": "Total Images",
+            "value": "5,860"
+          },
+          {
+            "label": "Healthy Cases",
+            "value": "188"
+          },
+          {
+            "label": "Cancer Cases",
+            "value": "105"
+          },
+          {
+            "label": "Camera",
+            "value": "FLIR SC-620"
+          },
+          {
+            "label": "Resolution",
+            "value": "640 × 480"
+          },
+          {
+            "label": "Protocol",
+            "value": "Dynamic (DIT)"
+          },
+          {
+            "label": "Images per Patient",
+            "value": "20 sequential"
+          }
+        ]
+      },
+      {
+        "type": "protocols",
+        "title": "Dynamic Thermography Protocol",
+        "description": "The dataset uses Dynamic Image Thermography (DIT), which has been shown to better differentiate\nbetween normal and abnormal breast tissue compared to static protocols. The protocol involves:\n",
+        "protocols": [
+          {
+            "title": "1. Cooling Phase",
+            "description": "Electric fan used to cool breasts and armpits for several minutes, causing vascular constriction\nin normal tissue while abnormal tissue remains warmer due to undeveloped vasculature muscles.\n"
+          },
+          {
+            "title": "2. Sequential Imaging",
+            "description": "20 frontal infrared images captured at 15-second intervals over 5 minutes as breasts return\nto thermal equilibrium with the environment.\n"
+          },
+          {
+            "title": "3. Temperature Matrix Extraction",
+            "description": "Temperature matrices extracted from each image, allowing for time-series analysis of thermal\nrecovery patterns between healthy and cancerous tissue.\n"
+          },
+          {
+            "title": "4. ROI Segmentation",
+            "description": "Pre-segmented regions of interest (ROI) provided, isolating breast tissue from background\nand other body parts for focused analysis.\n"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Dataset Contents",
+        "items": [
+          "**Infrared Images:** 20 sequential thermal images per patient captured during dynamic protocol",
+          "**Temperature Matrices:** Numerical temperature data for each pixel in Celsius",
+          "**Digitized Mammograms:** Corresponding mammography images for comparison",
+          "**ROI Masks:** Pre-segmented breast regions for automated analysis",
+          "**Clinical Data:** Age, race, personal history, family history, medical history",
+          "**Diagnosis Validation:** 117 of 293 cases validated by biopsy (40%), with 74% of cancer cases confirmed"
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Research Impact & Performance",
+        "description": "The DMR-IR dataset has been instrumental in advancing breast cancer detection through thermography:\n",
+        "table": {
+          "headers": [
+            "Study",
+            "Method",
+            "Accuracy",
+            "Key Feature"
+          ],
+          "rows": [
+            [
+              "Silva et al. (2020)",
+              "SVM + Feature Engineering",
+              "100%",
+              "Texture analysis, clustering, fractal geometry"
+            ],
+            [
+              "Deep Learning Model (2022)",
+              "U-Net + CNN",
+              "99.33%",
+              "Automatic segmentation + classification"
+            ],
+            [
+              "Real-time Thermography (2024)",
+              "Inception Mv4",
+              "High Accuracy",
+              "Mobile thermal camera integration"
+            ],
+            [
+              "Genetic Algorithm + SVM (2021)",
+              "GA-SVM Ensemble",
+              "94.79% AUC",
+              "Feature and model selection"
+            ]
+          ]
+        },
+        "note": {
+          "type": "highlight",
+          "text": "**Note:** While these results are impressive, recent surveys highlight potential\nconcerns about data leakage when patient images are split between training and test sets.\nBest practices now recommend patient-level splitting to ensure robust validation.\n"
+        }
+      },
+      {
+        "type": "list",
+        "title": "Technical Specifications",
+        "items": [
+          "**Camera Model:** FLIR SC-620 infrared thermal camera",
+          "**Resolution:** 640 × 480 pixels (meets American Standard for thermography)",
+          "**Thermal Sensitivity:** Meets 50 mK NETD requirement",
+          "**Temperature Precision:** 0.05°C (American Standard compliant)",
+          "**Image Formats:** JPEG (visual) and thermal matrix format (numerical)",
+          "**Color Representations:** Grayscale and colorized versions available",
+          "**Capture Environment:** Temperature-controlled clinical setting"
+        ]
+      },
+      {
+        "type": "links",
+        "title": "Access & Citation",
+        "description": "Dataset access information:",
+        "links": [
+          {
+            "text": "DMR-IR Database Portal (Official)",
+            "url": "https://visual.ic.uff.br/dmi/"
+          },
+          {
+            "text": "Kaggle Mirror Version",
+            "url": "https://www.kaggle.com/datasets/asdeepak/thermal-images-for-breast-cancer-diagnosis-dmrir"
+          }
+        ],
+        "note": {
+          "type": "highlight",
+          "text": "**Citation:** When using this dataset, please cite the Visual Lab at Federal University\nFluminense and acknowledge the Hospital Universitario Antonio Pedro for providing the clinical data.\nReference the Brazilian Ministry of Health registration: CAAE: 01042812.0.0000.5243.\n"
+        }
+      },
+      {
+        "type": "list",
+        "title": "Limitations & Considerations",
+        "items": [
+          "**Geographic Diversity:** All patients from single institution in Brazil",
+          "**Validation Method:** 60% of cases diagnosed by mammography alone, 40% confirmed by biopsy",
+          "**Temporal Scope:** Dataset collected in single time period",
+          "**Model Generalization:** High reported accuracies should be validated on external datasets",
+          "**Data Leakage Risk:** Researchers should use patient-level splits, not image-level splits",
+          "**Protocol Standardization:** Dynamic protocol not yet standard in clinical practice"
+        ]
+      }
+    ]
+  }
+}

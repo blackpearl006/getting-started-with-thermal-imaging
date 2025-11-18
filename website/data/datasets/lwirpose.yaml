@@ -1,0 +1,167 @@
+# ==============================================
+# LWIRPOSE Dataset
+# Long-Wave Infrared RGB-Thermal Paired 2D Human Pose Dataset
+# ==============================================
+
+id: "lwirpose"
+title: "LWIRPOSE"
+subtitle: "Long-Wave Infrared Pose Dataset"
+category: "research"
+
+# ==============================================
+# CARD DISPLAY
+# ==============================================
+card:
+  description: |
+    RGB-Thermal paired dataset designed for 2D human pose estimation research.
+    Features nearly aligned RGB and LWIR thermal images with pose annotations.
+
+  stats:
+    - label: "Images"
+      value: "2,400+"
+    - label: "Type"
+      value: "Paired"
+    - label: "Format"
+      value: "2D Pose"
+
+  tags:
+    - "RGB-Thermal"
+    - "2D Pose"
+    - "Paired Dataset"
+    - "LWIR"
+
+  links:
+    primary:
+      text: "Access Dataset"
+      url: "https://github.com/avinres/LWIRPOSE"
+    secondary:
+      text: "View Details"
+      action: "show-detail"
+
+# ==============================================
+# DETAIL VIEW
+# ==============================================
+detail:
+  header:
+    badges:
+      - type: "research"
+        text: "Research - Paired RGB-Thermal"
+
+    meta:
+      - label: "Institution"
+        value: "Research Collaboration"
+      - label: "Year Released"
+        value: "2024"
+      - label: "License"
+        value: "Open Source"
+      - label: "Format"
+        value: "Paired RGB-LWIR"
+
+  sections:
+    # Overview Section
+    - type: "overview"
+      title: "Overview"
+      content:
+        - type: "paragraph"
+          text: |
+            LWIRPOSE is a novel dataset that bridges the gap between RGB and Long-Wave Infrared (LWIR) thermal
+            imaging for 2D human pose estimation. It provides nearly aligned RGB-Thermal image pairs with
+            comprehensive 2D human pose annotations, enabling research in cross-modal learning and multi-spectral
+            pose estimation.
+
+        - type: "paragraph"
+          text: |
+            The dataset addresses the critical challenge of limited annotated thermal pose data by providing
+            paired visible and thermal images. This pairing allows researchers to leverage knowledge from
+            well-established RGB pose estimation models and transfer it to the thermal domain.
+
+        - type: "highlight"
+          text: |
+            **Key Innovation:** First publicly available RGB-LWIR paired dataset specifically
+            designed for 2D human pose estimation, enabling cross-modal transfer learning and domain
+            adaptation research.
+
+    # Dataset Specifications
+    - type: "specifications"
+      title: "Dataset Specifications"
+      params:
+        - label: "LWIR Images"
+          value: "2,400+"
+        - label: "RGB Images"
+          value: "2,400+"
+        - label: "Alignment"
+          value: "Nearly Paired"
+        - label: "Pose Type"
+          value: "2D Keypoints"
+        - label: "Annotation Style"
+          value: "Human Pose"
+        - label: "Modalities"
+          value: "Dual (RGB+LWIR)"
+        - label: "Dataset Size"
+          value: "Medium"
+        - label: "Calibration"
+          value: "Spatial Aligned"
+
+    # Dataset Characteristics
+    - type: "list"
+      title: "Dataset Characteristics"
+      description: |
+        **Pairing Strategy:**
+
+        **Pose Annotation Details:**
+      items:
+        - "**Nearly Aligned:** RGB and LWIR cameras positioned to capture same scene from similar viewpoints"
+        - "**Temporal Synchronization:** Images captured at same time instances"
+        - "**Spatial Correspondence:** Careful calibration ensures pixel-level correspondence"
+        - "**Shared Annotations:** Same 2D pose annotations applicable to both modalities"
+        - "2D anatomical keypoints for human joints"
+        - "Bounding boxes for person detection"
+        - "Occlusion and visibility flags"
+        - "Quality control through manual verification"
+
+    # Research Applications
+    - type: "protocols"
+      title: "Research Applications"
+      protocols:
+        - title: "Cross-Modal Pose Estimation"
+          description: |
+            Train models on RGB data and transfer to thermal domain, or vice versa, enabling
+            pose estimation in challenging lighting conditions.
+
+        - title: "Domain Adaptation"
+          description: |
+            Study how models trained on one modality can adapt to another, crucial for
+            deploying systems across different sensor types.
+
+        - title: "Multi-Modal Fusion"
+          description: |
+            Combine RGB and thermal features for improved pose estimation accuracy,
+            leveraging complementary information from both modalities.
+
+        - title: "Low-Light Performance"
+          description: |
+            Use thermal data to maintain pose estimation accuracy when RGB cameras fail
+            due to poor lighting or complete darkness.
+
+    # Advantages for Research
+    - type: "list"
+      title: "Advantages for Research"
+      items:
+        - "**Paired Modalities:** Enables direct comparison and cross-modal learning"
+        - "**Calibrated Alignment:** Spatial correspondence facilitates multi-modal fusion"
+        - "**Comprehensive Annotations:** Detailed 2D pose labels for both modalities"
+        - "**Transfer Learning:** Leverage RGB models for thermal pose estimation"
+        - "**Day/Night Performance:** Thermal enables 24-hour operation"
+        - "**Privacy Considerations:** Thermal imaging provides anonymity"
+
+    # Access & Resources
+    - type: "links"
+      title: "Access & Resources"
+      links:
+        - text: "GitHub Repository"
+          url: "https://github.com/avinres/LWIRPOSE"
+      note:
+        type: "highlight"
+        text: |
+          **Citation:** When using LWIRPOSE dataset, please cite the repository and acknowledge
+          the contributions to paired RGB-thermal pose estimation research.

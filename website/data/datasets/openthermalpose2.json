@@ -1,0 +1,149 @@
+{
+  "id": "openthermalpose2",
+  "title": "OpenThermalPose2",
+  "subtitle": "Extended Thermal Pose Dataset",
+  "category": "research",
+  "card": {
+    "description": "Extended version with nearly 2x more data, covering fitness exercises, multi-person activities,\nand outdoor scenarios across various weather conditions.\n",
+    "stats": [
+      {
+        "label": "Images",
+        "value": "11,391"
+      },
+      {
+        "label": "Subjects",
+        "value": "170"
+      },
+      {
+        "label": "Instances",
+        "value": "21,125"
+      }
+    ],
+    "tags": [
+      "Pose Estimation",
+      "YOLO11",
+      "Multi-Person",
+      "Fitness Activities"
+    ],
+    "links": {
+      "primary": {
+        "text": "Access Dataset",
+        "url": "https://github.com/IS2AI/OpenThermalPose"
+      },
+      "secondary": {
+        "text": "View Details",
+        "action": "show-detail"
+      }
+    }
+  },
+  "detail": {
+    "header": {
+      "badges": [
+        {
+          "type": "research",
+          "text": "Research - Pose Estimation"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Institution",
+          "value": "IS2AI Lab, Nazarbayev University"
+        },
+        {
+          "label": "Year Released",
+          "value": "2024"
+        },
+        {
+          "label": "License",
+          "value": "Open Source"
+        },
+        {
+          "label": "GitHub",
+          "value": "IS2AI/OpenThermalPose"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "type": "overview",
+        "title": "Overview",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "OpenThermalPose2 is the extended version of the original OpenThermalPose dataset, featuring\nnearly double the data, subjects, and pose variations. It represents the most comprehensive\nopen-source thermal human pose dataset available.\n"
+          },
+          {
+            "type": "highlight",
+            "text": "**Major Expansion:** From 6,090 images to 11,391 images (+87%), from 31 to 170\nsubjects (+448%), and from 14,315 to 21,125 instances (+48%).\n"
+          }
+        ]
+      },
+      {
+        "type": "specifications",
+        "title": "What's New in Version 2",
+        "params": [
+          {
+            "label": "More Images",
+            "value": "+5,301"
+          },
+          {
+            "label": "More Subjects",
+            "value": "+139"
+          },
+          {
+            "label": "More Instances",
+            "value": "+6,810"
+          },
+          {
+            "label": "New Models",
+            "value": "YOLO11-pose"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Enhanced Coverage",
+        "items": [
+          "**More Fitness Exercises:** Expanded variety of workout poses",
+          "**More Multi-Person Scenes:** Complex interactions and group activities",
+          "**More Locations:** Additional indoor and outdoor environments",
+          "**More Weather Conditions:** Extended seasonal and temperature variations",
+          "**More Challenging Poses:** Difficult occlusions and body configurations"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Performance Improvements",
+        "description": "Models trained on OpenThermalPose2 consistently outperform those trained on the original dataset:\n\nThe dataset now includes both YOLOv8-pose and YOLO11-pose baseline models, with TensorRT\noptimized versions for real-time deployment on NVIDIA Jetson devices.\n",
+        "items": [
+          "Better generalization to unseen scenarios",
+          "Improved accuracy on challenging poses",
+          "Enhanced multi-person tracking",
+          "Reduced false positives in cluttered scenes"
+        ]
+      },
+      {
+        "type": "links",
+        "title": "Access & Citation",
+        "links": [
+          {
+            "text": "GitHub Repository (includes v2)",
+            "url": "https://github.com/IS2AI/OpenThermalPose"
+          },
+          {
+            "text": "IEEE DataPort",
+            "url": "https://ieee-dataport.org/documents/openthermalpose2"
+          },
+          {
+            "text": "Hugging Face Datasets",
+            "url": "https://huggingface.co/datasets/issai/OpenThermalPose2"
+          }
+        ],
+        "note": {
+          "type": "highlight",
+          "text": "**Recommended:** For new projects, use OpenThermalPose2 for better performance.\nThe original OpenThermalPose is still valuable for comparison studies and when computational\nresources are limited.\n"
+        }
+      }
+    ]
+  }
+}

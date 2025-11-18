@@ -1,0 +1,236 @@
+{
+  "id": "kaggle-thermal",
+  "title": "Thermal Human Detection",
+  "subtitle": "Kaggle YOLO Format Dataset",
+  "category": "surveillance",
+  "card": {
+    "description": "General-purpose thermal human detection dataset with YOLO-format bounding box annotations.\nSuitable for training object detection models for surveillance applications.\n",
+    "stats": [
+      {
+        "label": "Format",
+        "value": "YOLO"
+      },
+      {
+        "label": "Access",
+        "value": "Public"
+      },
+      {
+        "label": "Setup",
+        "value": "< 5 min"
+      }
+    ],
+    "tags": [
+      "YOLO Format",
+      "Easy Access",
+      "Beginner Friendly",
+      "Kaggle"
+    ],
+    "links": {
+      "primary": {
+        "text": "Access on Kaggle",
+        "url": "https://www.kaggle.com/datasets/aryashah2k/thermal-images-for-human-detection"
+      },
+      "secondary": {
+        "text": "View Details",
+        "action": "show-detail"
+      }
+    }
+  },
+  "detail": {
+    "header": {
+      "badges": [
+        {
+          "type": "surveillance",
+          "text": "General Detection - Easy Access"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Platform",
+          "value": "Kaggle"
+        },
+        {
+          "label": "Format",
+          "value": "YOLO"
+        },
+        {
+          "label": "Access",
+          "value": "Public & Free"
+        },
+        {
+          "label": "Task",
+          "value": "Object Detection"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "type": "overview",
+        "title": "Overview",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "This Kaggle-hosted thermal imaging dataset provides a straightforward, accessible resource for\ntraining and testing thermal human detection models. Pre-formatted with YOLO-style bounding box\nannotations, it's designed for researchers and developers who want to quickly prototype thermal\nperson detection systems without extensive preprocessing.\n"
+          },
+          {
+            "type": "paragraph",
+            "text": "The dataset serves as an excellent starting point for learning thermal image processing and\nobject detection, offering immediate compatibility with popular detection frameworks like\nYOLOv5, YOLOv8, YOLOv11, and other YOLO variants. The community-driven nature of Kaggle also\nmeans active discussions, shared notebooks, and collaborative improvements.\n"
+          },
+          {
+            "type": "highlight",
+            "text": "**Perfect For Beginners:** This dataset is ideal for getting started with\nthermal image detection. The YOLO format, comprehensive documentation, and active Kaggle\ncommunity make it accessible for both learning and rapid prototyping.\n"
+          }
+        ]
+      },
+      {
+        "type": "specifications",
+        "title": "Dataset Characteristics",
+        "params": [
+          {
+            "label": "Annotation Format",
+            "value": "YOLO"
+          },
+          {
+            "label": "Access Method",
+            "value": "Kaggle API"
+          },
+          {
+            "label": "License",
+            "value": "Open"
+          },
+          {
+            "label": "Target Class",
+            "value": "Human/Person"
+          },
+          {
+            "label": "Setup Time",
+            "value": "< 5 minutes"
+          },
+          {
+            "label": "Community",
+            "value": "Active"
+          },
+          {
+            "label": "Notebooks",
+            "value": "Available"
+          },
+          {
+            "label": "Framework",
+            "value": "Any YOLO"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Key Advantages",
+        "items": [
+          "**YOLO-Ready:** Pre-formatted annotations work out-of-the-box with YOLO frameworks",
+          "**Quick Start:** Download and start training in under 5 minutes",
+          "**Free Access:** No registration fees or access restrictions",
+          "**Kaggle Integration:** Easy download via Kaggle API or web interface",
+          "**Community Support:** Active discussions and shared notebooks",
+          "**Framework Agnostic:** Compatible with YOLOv5, YOLOv8, YOLOv11, and variants",
+          "**Beginner Friendly:** Great for learning thermal detection basics",
+          "**Code Examples:** Pre-written notebooks demonstrate usage"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Ideal Use Cases",
+        "description": "**Learning & Education:**\n\n**Rapid Prototyping:**\n\n**General Surveillance:**\n",
+        "items": [
+          "Understanding thermal image characteristics and detection challenges",
+          "Learning YOLO-based object detection pipelines",
+          "Experimenting with different detection architectures",
+          "Benchmarking detection algorithms on thermal data",
+          "Quick proof-of-concept development for thermal person detection",
+          "Testing different YOLO variants (v5, v8, v11) on thermal data",
+          "Baseline model development before scaling to larger datasets",
+          "General-purpose person detection in thermal imagery",
+          "Security and monitoring applications",
+          "Low-light surveillance system development"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Getting Started",
+        "description": "**Quick Setup Steps:**\n\n**Integration with YOLO:**\n\nThe standard YOLO directory structure (images/ and labels/) makes integration seamless with\nany YOLO-based framework. Simply point your training script to the dataset directory.\n",
+        "items": [
+          "Create a free Kaggle account at kaggle.com",
+          "Download dataset via Kaggle web interface or API",
+          "Extract files to your working directory",
+          "Update dataset path in YOLO configuration",
+          "Start training immediately - no preprocessing needed",
+          "Compatible with Ultralytics YOLO (YOLOv5, YOLOv8, YOLOv11)",
+          "Works with Darknet YOLO implementations",
+          "Supports YOLO format converters for other frameworks"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Kaggle Community Resources",
+        "description": "**Available Resources:**\n\n**Community Contributions:**\n",
+        "items": [
+          "**Shared Notebooks:** Pre-written training and inference examples",
+          "**Discussion Forum:** Ask questions and share insights",
+          "**Code Snippets:** Ready-to-use data loading and augmentation code",
+          "**Leaderboards:** Compare model performance with other users",
+          "Users share trained model weights",
+          "Performance benchmarks for different YOLO versions",
+          "Data augmentation strategies specific to thermal imaging",
+          "Tips for improving detection accuracy"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Training Recommendations",
+        "description": "**Model Selection:**\n\n**Training Tips:**\n",
+        "items": [
+          "**YOLOv8n/s:** Fast inference for real-time applications",
+          "**YOLOv8m/l:** Balanced speed and accuracy",
+          "**YOLOv11:** Latest architecture improvements",
+          "Start with pretrained COCO weights for transfer learning",
+          "Use thermal-specific data augmentation (brightness, thermal noise)",
+          "Monitor validation metrics to prevent overfitting",
+          "Experiment with different input resolutions (640, 1024)",
+          "Consider multi-scale training for varying person sizes"
+        ]
+      },
+      {
+        "type": "links",
+        "title": "Access & Resources",
+        "description": "**Dataset Access:**\n\n**Additional Resources:**\n- Kaggle API documentation for automated downloads\n- YOLO framework documentation (Ultralytics, Darknet)\n- Community notebooks with training examples\n- Discussion forum for troubleshooting\n",
+        "links": [
+          {
+            "text": "Kaggle Dataset Page",
+            "url": "https://www.kaggle.com/datasets/aryashah2k/thermal-images-for-human-detection"
+          },
+          {
+            "text": "Ultralytics YOLOv8 Documentation",
+            "url": "https://docs.ultralytics.com/"
+          }
+        ],
+        "note": {
+          "type": "highlight",
+          "text": "**Getting Started Tip:** If you're new to thermal detection, start with this dataset.\nThe YOLO format and Kaggle integration make it the fastest way to build and test\nyour first thermal person detection model.\n"
+        }
+      },
+      {
+        "type": "list",
+        "title": "Limitations & Next Steps",
+        "description": "**Dataset Limitations:**\n\n**When to Move to Specialized Datasets:**\n",
+        "items": [
+          "General-purpose dataset may lack specific application scenarios",
+          "Size and diversity may be limited compared to larger research datasets",
+          "Limited metadata about capture conditions and camera specifications",
+          "May not include challenging scenarios (occlusions, multi-person, etc.)",
+          "**Medical Applications:** Use DMR-IR or Mendeley for breast thermography",
+          "**Pose Estimation:** Switch to OpenThermalPose or OpenThermalPose2",
+          "**UAV/Aerial:** Use POP dataset for drone-based detection",
+          "**Privacy-Focused:** Consider IPHPDT for healthcare monitoring",
+          "**Multi-Modal:** Use LWIRPOSE for RGB-thermal fusion research"
+        ]
+      }
+    ]
+  }
+}

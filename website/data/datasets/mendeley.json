@@ -1,0 +1,248 @@
+{
+  "id": "mendeley",
+  "title": "Breast Thermography (Mendeley)",
+  "subtitle": "Colombian Multi-Position Dataset",
+  "category": "medical-breast",
+  "card": {
+    "description": "Recent dataset from Colombia with three-position imaging (anterior, left oblique, right oblique)\nfollowing AAT protocol. Includes benign and malignant cases with pathology validation.\n",
+    "stats": [
+      {
+        "label": "Images",
+        "value": "357"
+      },
+      {
+        "label": "Subjects",
+        "value": "119"
+      },
+      {
+        "label": "Protocol",
+        "value": "SIT"
+      }
+    ],
+    "tags": [
+      "Breast Cancer",
+      "AAT Protocol",
+      "Pathology Validated",
+      "FLIR A300"
+    ],
+    "links": {
+      "primary": {
+        "text": "Access Dataset",
+        "url": "https://data.mendeley.com/datasets/mhrt4svjxc/3"
+      },
+      "secondary": {
+        "text": "View Details",
+        "action": "show-detail"
+      }
+    }
+  },
+  "detail": {
+    "header": {
+      "badges": [
+        {
+          "type": "medical",
+          "text": "Medical - Breast Cancer"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Institution",
+          "value": "Universidad del Valle, Colombia"
+        },
+        {
+          "label": "Year Released",
+          "value": "2024"
+        },
+        {
+          "label": "License",
+          "value": "Open Access"
+        },
+        {
+          "label": "DOI",
+          "value": "10.17632/mhrt4svjxc.3"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "type": "overview",
+        "title": "Overview",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "This recent breast thermography dataset represents a valuable contribution from Colombia,\nproviding high-quality thermal images with pathologically validated diagnoses. The dataset\nfollows the American Academy of Thermology (AAT) protocol for standardized image capture.\n"
+          },
+          {
+            "type": "paragraph",
+            "text": "Collected between 2021-2022 at San Juan de Dios Hospital in Cali, Colombia, this dataset\naddresses the critical scarcity of publicly available breast thermographic images. It has\nbeen used in state-of-the-art deep learning studies achieving over 97% accuracy in breast\ncancer classification.\n"
+          },
+          {
+            "type": "highlight",
+            "text": "**Recent Achievement:** ResNet152 + SVM classifier achieved 97.62% accuracy,\n95.79% precision, and 99% AUC on this dataset, demonstrating its quality for training\nadvanced deep learning models.\n"
+          }
+        ]
+      },
+      {
+        "type": "specifications",
+        "title": "Dataset Specifications",
+        "params": [
+          {
+            "label": "Total Images",
+            "value": "357"
+          },
+          {
+            "label": "Subjects",
+            "value": "119"
+          },
+          {
+            "label": "Malignant Cases",
+            "value": "35 (105 images)"
+          },
+          {
+            "label": "Benign Cases",
+            "value": "84 (252 images)"
+          },
+          {
+            "label": "Age Range",
+            "value": "18-81 years"
+          },
+          {
+            "label": "Camera",
+            "value": "FLIR A300"
+          },
+          {
+            "label": "Resolution",
+            "value": "320 × 240 (16-bit)"
+          },
+          {
+            "label": "Positions",
+            "value": "3 per subject"
+          }
+        ]
+      },
+      {
+        "type": "protocols",
+        "title": "AAT Imaging Protocol",
+        "description": "The dataset follows the rigorous American Academy of Thermology protocol for breast thermography:\n",
+        "protocols": [
+          {
+            "title": "Environmental Control",
+            "description": "Medical office: 3.20m × 4.14m × 2.40m, temperature 22-24°C, relative humidity 45-50%,\nno artificial illumination to prevent thermal interference.\n"
+          },
+          {
+            "title": "Patient Preparation",
+            "description": "8 minutes of rest before imaging to allow thermal equilibration. Patient remains\nseated at 1m from camera, 88cm above floor level.\n"
+          },
+          {
+            "title": "Three-Position Capture",
+            "description": "Anterior (frontal), left oblique (30-45°), and right oblique (30-45°) views captured\nto provide comprehensive thermal mapping of breast tissue.\n"
+          },
+          {
+            "title": "Static Protocol (SIT)",
+            "description": "Uses Static Image Thermography, the most prevalent standard globally, suitable for\nclinical deployment and consistent with international guidelines.\n"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Technical Camera Specifications",
+        "items": [
+          "**Model:** FLIR A300 (30 Hz)",
+          "**Lens:** 18 mm with 25° Field of View",
+          "**Resolution:** 320 × 240 pixels (16-bit)",
+          "**Thermal Sensitivity (NEdT):** < 0.05°C @ +30°C (50 mK)",
+          "**Detector:** Focal Plane Array (FPA), uncooled microbolometer",
+          "**IFoV:** 1.36 mrad",
+          "**Field of View:** Horizontal 25° × Vertical 18.8°",
+          "**Emissivity:** 0.98 for skin",
+          "**Wavelength Range:** Approximately 7.5-13 µm",
+          "**Working Distance:** 1 meter from patient"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Pathology Validation",
+        "description": "All diagnoses in this dataset are validated through pathology studies following biopsy procedures,\nproviding high-confidence ground truth labels:\n",
+        "items": [
+          "**Malignant Pathology (PM):** 35 patients with carcinoma at various stages",
+          "**Benign Pathology (PB):** 84 patients with findings including collagenized stroma, fibroadenoma, cysts, adenosis, apocrine metaplasia, stromal fibrosis, epithelial hyperplasia, microcalcifications, and nodules",
+          "The comprehensive pathology classification makes this dataset particularly valuable for training models to distinguish between different types of breast abnormalities, not just binary normal/abnormal classification"
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Research Applications",
+        "description": "Recent studies using this dataset have demonstrated:",
+        "table": {
+          "headers": [
+            "Study (Year)",
+            "Method",
+            "Performance"
+          ],
+          "rows": [
+            [
+              "ResNet152 + SVM (2024)",
+              "Deep feature extraction + classical ML",
+              "97.62% accuracy, 99% AUC, 0.06s latency"
+            ],
+            [
+              "Thermo-CAD (2025)",
+              "Multi-CNN ensemble",
+              "High accuracy on both DMR-IR and Mendeley"
+            ],
+            [
+              "Multi-CNN Study",
+              "Various architectures tested",
+              "Demonstrated generalization capability"
+            ]
+          ]
+        }
+      },
+      {
+        "type": "list",
+        "title": "Advantages Over Existing Datasets",
+        "items": [
+          "**Recent Collection:** 2021-2022 capture period with modern equipment",
+          "**Multi-Position Views:** Three angles per patient for comprehensive analysis",
+          "**Pathology Validated:** All diagnoses confirmed through biopsy, not just mammography",
+          "**Detailed Classification:** Specific benign pathology types documented",
+          "**Standardized Protocol:** Follows internationally recognized AAT guidelines",
+          "**Controlled Environment:** Detailed documentation of acquisition conditions",
+          "**Open Access:** Freely available through Mendeley Data repository",
+          "**Good Balance:** Includes both benign (70.6%) and malignant (29.4%) cases"
+        ]
+      },
+      {
+        "type": "links",
+        "title": "Access & Citation",
+        "description": "**Dataset Access:**\n\n**Supporting Institutions:**\n- Universidad Nacional Abierta y a Distancia (UNAD)\n- Hospital San Juan de Dios de Cali\n- Universidad del Valle\n- Perception and Intelligent Systems Laboratory (PSI)\n",
+        "links": [
+          {
+            "text": "Mendeley Data Repository (Version 3)",
+            "url": "https://data.mendeley.com/datasets/mhrt4svjxc/3"
+          },
+          {
+            "text": "Dataset Description Paper (Data in Brief, 2024)",
+            "url": "https://www.sciencedirect.com/science/article/pii/S2352340924004724"
+          }
+        ],
+        "note": {
+          "type": "highlight",
+          "text": "**Citation:** Rodriguez-Guerrero, S., Loaiza-Correa, H., & Restrepo-Girón, A.D. (2024).\nDataset of breast thermography images for the detection of benign and malignant masses.\nData in Brief, 54, 110503. DOI: 10.17632/mhrt4svjxc.3\n"
+        }
+      },
+      {
+        "type": "list",
+        "title": "Limitations & Future Directions",
+        "description": "**Limitations:**\n\n**Recommended Use Cases:**\n- Transfer learning from models trained on DMR-IR\n- Multi-view analysis research\n- Combined dataset studies with DMR-IR for increased diversity\n- Validation of models trained on other datasets\n- Benign vs. malignant classification research\n",
+        "items": [
+          "**Dataset Size:** Smaller than DMR-IR (119 vs 293 patients), may benefit from augmentation",
+          "**Camera Resolution:** 320×240 pixels lower than American Standard recommendation",
+          "**Geographic Diversity:** Single institution in Colombia, may not represent global populations",
+          "**Static Protocol:** Does not include dynamic cooling protocol like DMR-IR",
+          "**Demographic Details:** Limited demographic breakdown beyond age range"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "id": "iphpdt",
+  "title": "IPHPDT",
+  "subtitle": "Identity-Preserved Human Posture Detection",
+  "category": "research",
+  "card": {
+    "description": "Large-scale infrared thermal dataset for human posture detection including standing,\nsitting, lying, and bending poses with privacy preservation.\n",
+    "stats": [
+      {
+        "label": "Images",
+        "value": "75,000"
+      },
+      {
+        "label": "Postures",
+        "value": "4"
+      },
+      {
+        "label": "Focus",
+        "value": "Privacy"
+      }
+    ],
+    "tags": [
+      "Posture Detection",
+      "Privacy-Preserving",
+      "Large-Scale",
+      "Activity Recognition"
+    ],
+    "links": {
+      "primary": {
+        "text": "View Paper",
+        "url": "https://www.mdpi.com/1424-8220/23/1/92"
+      },
+      "secondary": {
+        "text": "View Details",
+        "action": "show-detail"
+      }
+    }
+  },
+  "detail": {
+    "header": {
+      "badges": [
+        {
+          "type": "research",
+          "text": "Research - Posture Detection"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Published",
+          "value": "MDPI Sensors, 2023"
+        },
+        {
+          "label": "Scale",
+          "value": "~75,000 images"
+        },
+        {
+          "label": "Focus",
+          "value": "Privacy-Preserving"
+        },
+        {
+          "label": "Postures",
+          "value": "4 Categories"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "type": "overview",
+        "title": "Overview",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "IPHPDT (Identity-Preserved Human Posture Detection in Thermal Images) is a large-scale infrared\nthermal dataset specifically designed for privacy-preserving human posture recognition. With\napproximately 75,000 images, it represents one of the largest publicly documented thermal datasets\nfocused on activity recognition and posture classification.\n"
+          },
+          {
+            "type": "paragraph",
+            "text": "The dataset addresses critical privacy concerns in surveillance and monitoring systems by using\nthermal imaging, which naturally obscures facial features and personal identifying characteristics\nwhile maintaining the ability to recognize human postures and activities. This makes it particularly\nvaluable for healthcare, elderly care, and smart home applications where privacy is paramount.\n"
+          },
+          {
+            "type": "highlight",
+            "text": "**Privacy Innovation:** Thermal imaging provides identity preservation by design -\nhuman subjects cannot be visually identified while their postures and movements remain clearly\ndetectable, solving a critical ethical challenge in monitoring systems.\n"
+          }
+        ]
+      },
+      {
+        "type": "specifications",
+        "title": "Dataset Specifications",
+        "params": [
+          {
+            "label": "Total Images",
+            "value": "~75,000"
+          },
+          {
+            "label": "Posture Classes",
+            "value": "4"
+          },
+          {
+            "label": "Imaging Type",
+            "value": "Infrared Thermal"
+          },
+          {
+            "label": "Environment",
+            "value": "Indoor"
+          },
+          {
+            "label": "Viewpoints",
+            "value": "Multiple"
+          },
+          {
+            "label": "Subjects",
+            "value": "Multiple"
+          },
+          {
+            "label": "Year",
+            "value": "2023"
+          },
+          {
+            "label": "Application",
+            "value": "Healthcare"
+          }
+        ]
+      },
+      {
+        "type": "protocols",
+        "title": "Four Posture Categories",
+        "protocols": [
+          {
+            "title": "Standing",
+            "description": "Upright standing position with various arm positions and orientations. Includes\nnatural standing variations, different body orientations relative to camera.\n"
+          },
+          {
+            "title": "Sitting",
+            "description": "Seated posture on various surfaces (chairs, floor, benches). Multiple sitting\nstyles captured including upright sitting, relaxed sitting, and cross-legged.\n"
+          },
+          {
+            "title": "Lying",
+            "description": "Horizontal lying positions including supine (face-up), prone (face-down), and\nside-lying. Critical for fall detection and sleep monitoring applications.\n"
+          },
+          {
+            "title": "Bending",
+            "description": "Forward bending and crouching postures. Important for detecting falls in progress,\npicking up objects, and transitional movements between other postures.\n"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Privacy-Preserving Features",
+        "description": "**Why Thermal Imaging for Privacy:**",
+        "items": [
+          "**No Facial Features:** Thermal cameras detect heat signatures, not visual details - faces are not recognizable",
+          "**No Clothing Details:** Personal clothing, accessories, and identifying marks are not visible",
+          "**No Skin Tone:** Racial and ethnic characteristics are not captured",
+          "**Universal Heat Signature:** All humans appear similar thermally regardless of appearance",
+          "**Darkness Operation:** Works in complete darkness, allowing monitoring without intrusive lighting",
+          "**GDPR Compliant:** Inherently privacy-preserving, reducing regulatory concerns"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Applications & Use Cases",
+        "description": "**Healthcare & Medical:**\n\n**Smart Home & Assisted Living:**\n\n**Research Applications:**\n",
+        "items": [
+          "**Fall Detection:** Real-time detection of falls in elderly care facilities",
+          "**Patient Monitoring:** Track posture changes in hospital beds",
+          "**Rehabilitation:** Monitor patient exercises and posture compliance",
+          "**Sleep Studies:** Analyze sleep postures without disturbing patients",
+          "**Activity Recognition:** Understand daily living activities",
+          "**Emergency Detection:** Detect unusual postures indicating distress",
+          "**Energy Management:** Occupancy detection for HVAC and lighting",
+          "**Security:** Intrusion detection without privacy concerns",
+          "**Activity Recognition Algorithms:** Train and test classification models",
+          "**Privacy-Preserving AI:** Develop ethical monitoring systems",
+          "**Temporal Analysis:** Study posture transitions and movement patterns"
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Technical Advantages",
+        "table": {
+          "headers": [
+            "Feature",
+            "IPHPDT (Thermal)",
+            "RGB Video Surveillance"
+          ],
+          "rows": [
+            [
+              "Privacy",
+              "✅ Identity preserved",
+              "❌ Faces visible"
+            ],
+            [
+              "Low Light",
+              "✅ Works in darkness",
+              "❌ Requires lighting"
+            ],
+            [
+              "Ethics",
+              "✅ GDPR friendly",
+              "⚠️ Privacy concerns"
+            ],
+            [
+              "Occlusion",
+              "✅ Sees through light clothing",
+              "❌ Surface only"
+            ],
+            [
+              "Dataset Size",
+              "75,000 images",
+              "Varies widely"
+            ],
+            [
+              "Focus",
+              "4 distinct postures",
+              "General activities"
+            ]
+          ]
+        },
+        "note": {
+          "type": "highlight",
+          "text": "**Healthcare Impact:** This privacy-by-design approach enables continuous monitoring\nof elderly patients, hospital patients, or individuals with disabilities without the ethical\nconcerns associated with traditional video surveillance.\n"
+        }
+      },
+      {
+        "type": "list",
+        "title": "Recommended Models & Approaches",
+        "description": "**Suitable Architectures:**\n\n**Training Strategies:**\n",
+        "items": [
+          "**CNNs:** ResNet, VGG, MobileNet for posture classification",
+          "**Vision Transformers:** ViT for global posture understanding",
+          "**Temporal Models:** LSTMs, GRUs for posture sequence analysis",
+          "**Lightweight Models:** EfficientNet, MobileNet for edge deployment",
+          "Transfer learning from RGB posture datasets",
+          "Data augmentation (rotation, scaling, thermal noise)",
+          "Multi-view fusion for improved accuracy",
+          "Temporal consistency constraints for video sequences"
+        ]
+      },
+      {
+        "type": "links",
+        "title": "Access & Citation",
+        "description": "**Publication:**\n\n**Dataset Access:**\n\nThe dataset is described in detail in the MDPI Sensors paper. For access to the actual dataset files,\nresearchers should contact the authors directly through the paper or check for supplementary data\navailability on the journal website.\n",
+        "links": [
+          {
+            "text": "MDPI Sensors Journal Paper (2023)",
+            "url": "https://www.mdpi.com/1424-8220/23/1/92"
+          }
+        ],
+        "note": {
+          "type": "highlight",
+          "text": "**Citation:** When using this dataset, please cite the MDPI Sensors 2023 paper:\n\"Identity-Preserved Human Posture Detection in Infrared Thermal Images\" and acknowledge the\nauthors' contribution to privacy-preserving activity recognition research.\n"
+        }
+      },
+      {
+        "type": "list",
+        "title": "Limitations & Considerations",
+        "description": "**Dataset Limitations:**\n\n**Practical Considerations:**\n",
+        "items": [
+          "**Indoor Only:** Captured in controlled indoor environments",
+          "**Limited Postures:** Four categories may not cover all real-world postures",
+          "**Transitional Poses:** May lack images of posture transitions",
+          "**Access Restrictions:** May require author contact for full dataset",
+          "**Single Activity:** Each image shows single posture, not complex activities",
+          "Models may need adaptation for outdoor or varying temperature environments",
+          "Multiple postures in single frame not explicitly covered",
+          "Clothing thickness may affect thermal signatures",
+          "Camera placement and angle critical for deployment"
+        ]
+      }
+    ]
+  }
+}

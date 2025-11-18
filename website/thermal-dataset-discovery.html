@@ -1,0 +1,3821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thermal Imaging Dataset Discovery</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #F5F7FA;
+            --bg-secondary: #EBF0F5;
+            --bg-card: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #86868B;
+            --border-color: #D2D2D7;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --red: #FF3B30;
+            --green: #30D158;
+            --blue: #0A84FF;
+            --yellow: #FFD60A;
+            --orange: #FF9F0A;
+            --purple: #BF5AF2;
+            --accent: #007AFF;
+            --medical: #FF2D55;
+            --research: #5856D6;
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #000000;
+            --bg-secondary: #161616;
+            --bg-card: #1C1C1E;
+            --text-primary: #F5F5F7;
+            --text-secondary: #86868B;
+            --border-color: #38383A;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.8);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 64px;
+            padding-bottom: 32px;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+        
+        .header-left h1 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        
+        .header-left .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .theme-toggle, .filter-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-toggle:hover, .filter-toggle:hover {
+            background: var(--border-color);
+        }
+        
+        .theme-toggle svg, .filter-toggle svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-secondary);
+        }
+
+        .filter-toggle.active svg {
+            fill: var(--accent);
+        }
+        
+        .filter-bar {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-right: 8px;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .filter-chip:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .filter-chip.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .datasets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .dataset-card {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        
+        .dataset-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .dataset-card.hidden {
+            display: none;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .card-title-group {
+            flex: 1;
+        }
+        
+        .card-title {
+            font-size: 1.375rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+        
+        .card-subtitle {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .category-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        
+        .badge-medical {
+            background: rgba(255, 45, 85, 0.1);
+            color: var(--medical);
+        }
+        
+        .badge-research {
+            background: rgba(88, 86, 214, 0.1);
+            color: var(--research);
+        }
+
+        .badge-surveillance {
+            background: rgba(255, 159, 10, 0.1);
+            color: var(--orange);
+        }
+        
+        .card-description {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.6875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tag {
+            padding: 4px 10px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 0.5px solid var(--border-color);
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0066CC;
+            transform: scale(1.02);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+        }
+        
+        .detail-view {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .detail-view.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+        
+        .back-button:hover {
+            background: var(--bg-primary);
+        }
+        
+        .detail-header {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+        
+        .detail-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        
+        .detail-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        
+        .detail-meta {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .meta-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .section {
+            background: var(--bg-card);
+            border: 0.5px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+        
+        .section-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+        
+        .section-content p {
+            margin-bottom: 16px;
+        }
+        
+        .section-content ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .section-content li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .section-content li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .param-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .param-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .param-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .protocols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .protocol-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .protocol-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .protocol-desc {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .highlight-box {
+            background: rgba(0, 122, 255, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+        }
+
+        .link-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .link-list li {
+            padding: 12px 0;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+
+        .link-list li:last-child {
+            border-bottom: none;
+        }
+
+        .link-list a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .link-list a:hover {
+            opacity: 0.7;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .comparison-table td {
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .datasets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>Thermal Imaging Dataset Discovery</h1>
+                <p class="subtitle">Curated collection of thermal imaging datasets for medical and research applications</p>
+            </div>
+            <div class="header-right">
+                <button class="filter-toggle" onclick="toggleFilters()" title="Toggle Filters">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                    </svg>
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div id="filter-bar" class="filter-bar" style="display: none;">
+            <div class="filter-group">
+                <span class="filter-label">Category:</span>
+                <span class="filter-chip active" data-filter="all" onclick="filterDatasets('all')">All</span>
+                <span class="filter-chip" data-filter="medical-breast" onclick="filterDatasets('medical-breast')">Breast Cancer</span>
+                <span class="filter-chip" data-filter="medical-other" onclick="filterDatasets('medical-other')">Medical - Other</span>
+                <span class="filter-chip" data-filter="research" onclick="filterDatasets('research')">Research/Pose</span>
+                <span class="filter-chip" data-filter="surveillance" onclick="filterDatasets('surveillance')">Surveillance</span>
+            </div>
+        </div>
+        
+        <div id="dashboard-view">
+            <div class="datasets-grid">
+                <!-- DMR-IR Dataset -->
+                <div class="dataset-card" data-category="medical-breast" onclick="showDetail('dmrir')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">DMR-IR</h2>
+                            <p class="card-subtitle">Database for Mastology Research - Infrared</p>
+                        </div>
+                        <span class="category-badge badge-medical">Medical</span>
+                    </div>
+                    <p class="card-description">
+                        The most widely used public breast thermography dataset with dynamic infrared imaging protocol. 
+                        Includes clinical data, mammograms, and ROI masks from 293 patients.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Images</div>
+                            <div class="stat-value">5,860+</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Patients</div>
+                            <div class="stat-value">293</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Protocol</div>
+                            <div class="stat-value">DIT</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Breast Cancer</span>
+                        <span class="tag">Dynamic Thermography</span>
+                        <span class="tag">Clinical Data</span>
+                        <span class="tag">FLIR SC-620</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://visual.ic.uff.br/dmi/" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Access Dataset</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Mendeley Breast Thermography Dataset -->
+                <div class="dataset-card" data-category="medical-breast" onclick="showDetail('mendeley')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">Breast Thermography (Mendeley)</h2>
+                            <p class="card-subtitle">Colombian Multi-Position Dataset</p>
+                        </div>
+                        <span class="category-badge badge-medical">Medical</span>
+                    </div>
+                    <p class="card-description">
+                        Recent dataset from Colombia with three-position imaging (anterior, left oblique, right oblique) 
+                        following AAT protocol. Includes benign and malignant cases with pathology validation.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Images</div>
+                            <div class="stat-value">357</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Subjects</div>
+                            <div class="stat-value">119</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Protocol</div>
+                            <div class="stat-value">SIT</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Breast Cancer</span>
+                        <span class="tag">AAT Protocol</span>
+                        <span class="tag">Pathology Validated</span>
+                        <span class="tag">FLIR A300</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://data.mendeley.com/datasets/mhrt4svjxc/3" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Access Dataset</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- OpenThermalPose -->
+                <div class="dataset-card" data-category="research" onclick="showDetail('openthermalpose')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">OpenThermalPose</h2>
+                            <p class="card-subtitle">Annotated Thermal Human Pose Dataset</p>
+                        </div>
+                        <span class="category-badge badge-research">Research</span>
+                    </div>
+                    <p class="card-description">
+                        Open-source thermal human pose estimation dataset with COCO-format annotations. 
+                        Includes 17 anatomical keypoints and bounding boxes for pose detection research.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Images</div>
+                            <div class="stat-value">6,090</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Subjects</div>
+                            <div class="stat-value">31</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Instances</div>
+                            <div class="stat-value">14,315</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Pose Estimation</span>
+                        <span class="tag">COCO Format</span>
+                        <span class="tag">YOLOv8</span>
+                        <span class="tag">Open Source</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://github.com/IS2AI/OpenThermalPose" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Access Dataset</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- OpenThermalPose2 -->
+                <div class="dataset-card" data-category="research" onclick="showDetail('openthermalpose2')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">OpenThermalPose2</h2>
+                            <p class="card-subtitle">Extended Thermal Pose Dataset</p>
+                        </div>
+                        <span class="category-badge badge-research">Research</span>
+                    </div>
+                    <p class="card-description">
+                        Extended version with nearly 2x more data, covering fitness exercises, multi-person activities, 
+                        and outdoor scenarios across various weather conditions.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Images</div>
+                            <div class="stat-value">11,391</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Subjects</div>
+                            <div class="stat-value">170</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Instances</div>
+                            <div class="stat-value">21,125</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Pose Estimation</span>
+                        <span class="tag">YOLO11</span>
+                        <span class="tag">Multi-Person</span>
+                        <span class="tag">Fitness Activities</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://github.com/IS2AI/OpenThermalPose" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Access Dataset</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Face-Oral Temperature Dataset -->
+                <div class="dataset-card" data-category="medical-other" onclick="showDetail('faceoral')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">Face-Oral Temperature</h2>
+                            <p class="card-subtitle">Thermal & Visible Facial Dataset</p>
+                        </div>
+                        <span class="category-badge badge-medical">Medical</span>
+                    </div>
+                    <p class="card-description">
+                        Large-scale dataset combining thermal and visible facial images with oral temperature measurements 
+                        from over 1,000 subjects for temperature screening research.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Subjects</div>
+                            <div class="stat-value">1,000+</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Modalities</div>
+                            <div class="stat-value">2</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus</div>
+                            <div class="stat-value">Face</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Facial Thermography</span>
+                        <span class="tag">Temperature Screening</span>
+                        <span class="tag">Multi-Modal</span>
+                        <span class="tag">PhysioNet</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://physionet.org/content/face-oral-temp-data/" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Access Dataset</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- LWIRPOSE Dataset -->
+                <div class="dataset-card" data-category="research" onclick="showDetail('lwirpose')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">LWIRPOSE</h2>
+                            <p class="card-subtitle">Long-Wave Infrared Pose Dataset</p>
+                        </div>
+                        <span class="category-badge badge-research">Research</span>
+                    </div>
+                    <p class="card-description">
+                        RGB-Thermal paired dataset designed for 2D human pose estimation research. 
+                        Features nearly aligned RGB and LWIR thermal images with pose annotations.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Images</div>
+                            <div class="stat-value">2,400+</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Type</div>
+                            <div class="stat-value">Paired</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Format</div>
+                            <div class="stat-value">2D Pose</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">RGB-Thermal</span>
+                        <span class="tag">2D Pose</span>
+                        <span class="tag">Paired Dataset</span>
+                        <span class="tag">LWIR</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://github.com/avinres/LWIRPOSE" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Access Dataset</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- IPHPDT Dataset -->
+                <div class="dataset-card" data-category="research" onclick="showDetail('iphpdt')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">IPHPDT</h2>
+                            <p class="card-subtitle">Identity-Preserved Human Posture Detection</p>
+                        </div>
+                        <span class="category-badge badge-research">Research</span>
+                    </div>
+                    <p class="card-description">
+                        Large-scale infrared thermal dataset for human posture detection including standing, 
+                        sitting, lying, and bending poses with privacy preservation.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Images</div>
+                            <div class="stat-value">75,000</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Postures</div>
+                            <div class="stat-value">4</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus</div>
+                            <div class="stat-value">Privacy</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Posture Detection</span>
+                        <span class="tag">Privacy-Preserving</span>
+                        <span class="tag">Large-Scale</span>
+                        <span class="tag">Activity Recognition</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://www.mdpi.com/1424-8220/23/1/92" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">View Paper</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- POP Thermal Dataset -->
+                <div class="dataset-card" data-category="surveillance" onclick="showDetail('pop')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">POP Thermal</h2>
+                            <p class="card-subtitle">Partially Occluded Person Detection</p>
+                        </div>
+                        <span class="category-badge badge-surveillance">Surveillance</span>
+                    </div>
+                    <p class="card-description">
+                        UAV-based infrared thermal imaging dataset for outdoor partially occluded person detection. 
+                        Designed for aerial surveillance and search-and-rescue applications.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Images</div>
+                            <div class="stat-value">8,768</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Platform</div>
+                            <div class="stat-value">UAV</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Type</div>
+                            <div class="stat-value">Outdoor</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">UAV</span>
+                        <span class="tag">Occlusion Detection</span>
+                        <span class="tag">Outdoor</span>
+                        <span class="tag">Surveillance</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://www.nature.com/articles/s41597-025-04600-0" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">View Paper</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Kaggle Thermal Human Detection -->
+                <div class="dataset-card" data-category="surveillance" onclick="showDetail('kaggle')">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2 class="card-title">Thermal Human Detection</h2>
+                            <p class="card-subtitle">Kaggle YOLO Format Dataset</p>
+                        </div>
+                        <span class="category-badge badge-surveillance">Surveillance</span>
+                    </div>
+                    <p class="card-description">
+                        General-purpose thermal human detection dataset with YOLO-format bounding box annotations. 
+                        Suitable for training object detection models for surveillance applications.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Format</div>
+                            <div class="stat-value">YOLO</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Platform</div>
+                            <div class="stat-value">Kaggle</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Task</div>
+                            <div class="stat-value">Detection</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Human Detection</span>
+                        <span class="tag">YOLO Format</span>
+                        <span class="tag">Bounding Boxes</span>
+                        <span class="tag">Easy Access</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://www.kaggle.com/datasets/sikdermdsaiful/thermal-images-for-human-detection" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Access Dataset</a>
+                        <button class="btn btn-secondary">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Views -->
+        
+        <!-- DMR-IR Detail -->
+        <div id="dmrir-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-medical">Medical - Breast Cancer</span>
+                <h1 class="detail-title">DMR-IR Dataset</h1>
+                <p class="detail-subtitle">Database for Mastology Research - Infrared Image</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Institution</div>
+                        <div class="meta-value">Federal University Fluminense, Brazil</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Year Released</div>
+                        <div class="meta-value">2012</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">License</div>
+                        <div class="meta-value">Ethics Committee Approved</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Access</div>
+                        <div class="meta-value">Public</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        The DMR-IR (Database for Mastology Research - Infrared) is the most widely used public breast thermography 
+                        dataset in research, utilized in 77% of studies in recent surveys. It represents the gold standard for 
+                        breast cancer thermography research and has been instrumental in advancing computer-aided diagnosis systems.
+                    </p>
+                    <p>
+                        The dataset was created by the Visual Lab at the Federal University Fluminense in collaboration with 
+                        Hospital Universitario Antonio Pedro (HUAP). It has been approved by the Research Ethics Committee 
+                        and registered with the Brazilian Ministry of Health under number CAAE: 01042812.0.0000.5243.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Key Achievement:</strong> Studies using this dataset have achieved up to 100% accuracy 
+                            in distinguishing between healthy and abnormal breast tissue using machine learning approaches 
+                            with dynamic thermography protocols.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Specifications</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Patients</div>
+                        <div class="param-value">293</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Total Images</div>
+                        <div class="param-value">5,860</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Healthy Cases</div>
+                        <div class="param-value">188</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Cancer Cases</div>
+                        <div class="param-value">105</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Camera</div>
+                        <div class="param-value">FLIR SC-620</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Resolution</div>
+                        <div class="param-value">640 × 480</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Protocol</div>
+                        <div class="param-value">Dynamic (DIT)</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Images per Patient</div>
+                        <div class="param-value">20 sequential</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dynamic Thermography Protocol</h2>
+                <div class="section-content">
+                    <p>
+                        The dataset uses Dynamic Image Thermography (DIT), which has been shown to better differentiate 
+                        between normal and abnormal breast tissue compared to static protocols. The protocol involves:
+                    </p>
+                </div>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">1. Cooling Phase</div>
+                        <div class="protocol-desc">
+                            Electric fan used to cool breasts and armpits for several minutes, causing vascular constriction 
+                            in normal tissue while abnormal tissue remains warmer due to undeveloped vasculature muscles.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">2. Sequential Imaging</div>
+                        <div class="protocol-desc">
+                            20 frontal infrared images captured at 15-second intervals over 5 minutes as breasts return 
+                            to thermal equilibrium with the environment.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">3. Temperature Matrix Extraction</div>
+                        <div class="protocol-desc">
+                            Temperature matrices extracted from each image, allowing for time-series analysis of thermal 
+                            recovery patterns between healthy and cancerous tissue.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">4. ROI Segmentation</div>
+                        <div class="protocol-desc">
+                            Pre-segmented regions of interest (ROI) provided, isolating breast tissue from background 
+                            and other body parts for focused analysis.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Contents</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Infrared Images:</strong> 20 sequential thermal images per patient captured during dynamic protocol</li>
+                        <li><strong>Temperature Matrices:</strong> Numerical temperature data for each pixel in Celsius</li>
+                        <li><strong>Digitized Mammograms:</strong> Corresponding mammography images for comparison</li>
+                        <li><strong>ROI Masks:</strong> Pre-segmented breast regions for automated analysis</li>
+                        <li><strong>Clinical Data:</strong> Age, race, personal history, family history, medical history</li>
+                        <li><strong>Diagnosis Validation:</strong> 117 of 293 cases validated by biopsy (40%), with 74% of cancer cases confirmed</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Research Impact & Performance</h2>
+                <div class="section-content">
+                    <p>
+                        The DMR-IR dataset has been instrumental in advancing breast cancer detection through thermography:
+                    </p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Study</th>
+                                <th>Method</th>
+                                <th>Accuracy</th>
+                                <th>Key Feature</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Silva et al. (2020)</td>
+                                <td>SVM + Feature Engineering</td>
+                                <td>100%</td>
+                                <td>Texture analysis, clustering, fractal geometry</td>
+                            </tr>
+                            <tr>
+                                <td>Deep Learning Model (2022)</td>
+                                <td>U-Net + CNN</td>
+                                <td>99.33%</td>
+                                <td>Automatic segmentation + classification</td>
+                            </tr>
+                            <tr>
+                                <td>Real-time Thermography (2024)</td>
+                                <td>Inception Mv4</td>
+                                <td>High Accuracy</td>
+                                <td>Mobile thermal camera integration</td>
+                            </tr>
+                            <tr>
+                                <td>Genetic Algorithm + SVM (2021)</td>
+                                <td>GA-SVM Ensemble</td>
+                                <td>94.79% AUC</td>
+                                <td>Feature and model selection</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Note:</strong> While these results are impressive, recent surveys highlight potential 
+                            concerns about data leakage when patient images are split between training and test sets. 
+                            Best practices now recommend patient-level splitting to ensure robust validation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Technical Specifications</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Camera Model:</strong> FLIR SC-620 infrared thermal camera</li>
+                        <li><strong>Resolution:</strong> 640 × 480 pixels (meets American Standard for thermography)</li>
+                        <li><strong>Thermal Sensitivity:</strong> Meets 50 mK NETD requirement</li>
+                        <li><strong>Temperature Precision:</strong> 0.05°C (American Standard compliant)</li>
+                        <li><strong>Image Formats:</strong> JPEG (visual) and thermal matrix format (numerical)</li>
+                        <li><strong>Color Representations:</strong> Grayscale and colorized versions available</li>
+                        <li><strong>Capture Environment:</strong> Temperature-controlled clinical setting</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Citation</h2>
+                <div class="section-content">
+                    <p><strong>Access Link:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://visual.ic.uff.br/dmi/" target="_blank">DMR-IR Database Portal (Official)</a></li>
+                        <li><a href="https://www.kaggle.com/datasets/asdeepak/thermal-images-for-breast-cancer-diagnosis-dmrir" target="_blank">Kaggle Mirror Version</a></li>
+                    </ul>
+                    <p><strong>Usage Requirements:</strong></p>
+                    <ul>
+                        <li>Free access for research purposes</li>
+                        <li>Proper citation required in publications</li>
+                        <li>Ethics committee approval obtained for dataset creation</li>
+                        <li>Patient consent forms signed</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Citation:</strong> When using this dataset, please cite the Visual Lab at Federal University 
+                            Fluminense and acknowledge the Hospital Universitario Antonio Pedro for providing the clinical data. 
+                            Reference the Brazilian Ministry of Health registration: CAAE: 01042812.0.0000.5243.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Limitations & Considerations</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Geographic Diversity:</strong> All patients from single institution in Brazil</li>
+                        <li><strong>Validation Method:</strong> 60% of cases diagnosed by mammography alone, 40% confirmed by biopsy</li>
+                        <li><strong>Temporal Scope:</strong> Dataset collected in single time period</li>
+                        <li><strong>Model Generalization:</strong> High reported accuracies should be validated on external datasets</li>
+                        <li><strong>Data Leakage Risk:</strong> Researchers should use patient-level splits, not image-level splits</li>
+                        <li><strong>Protocol Standardization:</strong> Dynamic protocol not yet standard in clinical practice</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mendeley Detail View -->
+        <div id="mendeley-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-medical">Medical - Breast Cancer</span>
+                <h1 class="detail-title">Breast Thermography Dataset (Mendeley)</h1>
+                <p class="detail-subtitle">Multi-Position Colombian Dataset with AAT Protocol</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Institution</div>
+                        <div class="meta-value">Universidad del Valle, Colombia</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Year Released</div>
+                        <div class="meta-value">2024</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">License</div>
+                        <div class="meta-value">Open Access</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">DOI</div>
+                        <div class="meta-value">10.17632/mhrt4svjxc.3</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        This recent breast thermography dataset represents a valuable contribution from Colombia, 
+                        providing high-quality thermal images with pathologically validated diagnoses. The dataset 
+                        follows the American Academy of Thermology (AAT) protocol for standardized image capture.
+                    </p>
+                    <p>
+                        Collected between 2021-2022 at San Juan de Dios Hospital in Cali, Colombia, this dataset 
+                        addresses the critical scarcity of publicly available breast thermographic images. It has 
+                        been used in state-of-the-art deep learning studies achieving over 97% accuracy in breast 
+                        cancer classification.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Recent Achievement:</strong> ResNet152 + SVM classifier achieved 97.62% accuracy, 
+                            95.79% precision, and 99% AUC on this dataset, demonstrating its quality for training 
+                            advanced deep learning models.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Specifications</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Images</div>
+                        <div class="param-value">357</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Subjects</div>
+                        <div class="param-value">119</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Malignant Cases</div>
+                        <div class="param-value">35 (105 images)</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Benign Cases</div>
+                        <div class="param-value">84 (252 images)</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Age Range</div>
+                        <div class="param-value">18-81 years</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Camera</div>
+                        <div class="param-value">FLIR A300</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Resolution</div>
+                        <div class="param-value">320 × 240 (16-bit)</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Positions</div>
+                        <div class="param-value">3 per subject</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">AAT Imaging Protocol</h2>
+                <div class="section-content">
+                    <p>
+                        The dataset follows the rigorous American Academy of Thermology protocol for breast thermography:
+                    </p>
+                </div>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">Environmental Control</div>
+                        <div class="protocol-desc">
+                            Medical office: 3.20m × 4.14m × 2.40m, temperature 22-24°C, relative humidity 45-50%, 
+                            no artificial illumination to prevent thermal interference.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Patient Preparation</div>
+                        <div class="protocol-desc">
+                            8 minutes of rest before imaging to allow thermal equilibration. Patient remains 
+                            seated at 1m from camera, 88cm above floor level.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Three-Position Capture</div>
+                        <div class="protocol-desc">
+                            Anterior (frontal), left oblique (30-45°), and right oblique (30-45°) views captured 
+                            to provide comprehensive thermal mapping of breast tissue.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Static Protocol (SIT)</div>
+                        <div class="protocol-desc">
+                            Uses Static Image Thermography, the most prevalent standard globally, suitable for 
+                            clinical deployment and consistent with international guidelines.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Technical Camera Specifications</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Model:</strong> FLIR A300 (30 Hz)</li>
+                        <li><strong>Lens:</strong> 18 mm with 25° Field of View</li>
+                        <li><strong>Resolution:</strong> 320 × 240 pixels (16-bit)</li>
+                        <li><strong>Thermal Sensitivity (NEdT):</strong> < 0.05°C @ +30°C (50 mK)</li>
+                        <li><strong>Detector:</strong> Focal Plane Array (FPA), uncooled microbolometer</li>
+                        <li><strong>IFoV:</strong> 1.36 mrad</li>
+                        <li><strong>Field of View:</strong> Horizontal 25° × Vertical 18.8°</li>
+                        <li><strong>Emissivity:</strong> 0.98 for skin</li>
+                        <li><strong>Wavelength Range:</strong> Approximately 7.5-13 µm</li>
+                        <li><strong>Working Distance:</strong> 1 meter from patient</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Note:</strong> While the FLIR A300 meets the International Standard (19,200 pixels, 
+                            80 mK NETD), it does not fully meet the more stringent American Standard requirement of 
+                            307,200 pixels (640 × 480). However, its thermal sensitivity exceeds both standards.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Pathology Validation</h2>
+                <div class="section-content">
+                    <p>
+                        All diagnoses in this dataset are validated through pathology studies following biopsy procedures, 
+                        providing high-confidence ground truth labels:
+                    </p>
+                    <ul>
+                        <li><strong>Malignant Pathology (PM):</strong> 35 patients with carcinoma at various stages</li>
+                        <li><strong>Benign Pathology (PB):</strong> 84 patients with findings including:
+                            <ul>
+                                <li>Collagenized stroma</li>
+                                <li>Fibroadenoma</li>
+                                <li>Cysts</li>
+                                <li>Adenosis</li>
+                                <li>Apocrine metaplasia</li>
+                                <li>Stromal fibrosis</li>
+                                <li>Epithelial hyperplasia</li>
+                                <li>Microcalcifications</li>
+                                <li>Nodules</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>
+                        The comprehensive pathology classification makes this dataset particularly valuable for 
+                        training models to distinguish between different types of breast abnormalities, not just 
+                        binary normal/abnormal classification.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Research Applications</h2>
+                <div class="section-content">
+                    <p><strong>Recent studies using this dataset have demonstrated:</strong></p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Study (Year)</th>
+                                <th>Method</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ResNet152 + SVM (2024)</td>
+                                <td>Deep feature extraction + classical ML</td>
+                                <td>97.62% accuracy, 99% AUC, 0.06s latency</td>
+                            </tr>
+                            <tr>
+                                <td>Thermo-CAD (2025)</td>
+                                <td>Multi-CNN ensemble</td>
+                                <td>High accuracy on both DMR-IR and Mendeley</td>
+                            </tr>
+                            <tr>
+                                <td>Multi-CNN Study</td>
+                                <td>Various architectures tested</td>
+                                <td>Demonstrated generalization capability</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Advantages Over Existing Datasets</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Recent Collection:</strong> 2021-2022 capture period with modern equipment</li>
+                        <li><strong>Multi-Position Views:</strong> Three angles per patient for comprehensive analysis</li>
+                        <li><strong>Pathology Validated:</strong> All diagnoses confirmed through biopsy, not just mammography</li>
+                        <li><strong>Detailed Classification:</strong> Specific benign pathology types documented</li>
+                        <li><strong>Standardized Protocol:</strong> Follows internationally recognized AAT guidelines</li>
+                        <li><strong>Controlled Environment:</strong> Detailed documentation of acquisition conditions</li>
+                        <li><strong>Open Access:</strong> Freely available through Mendeley Data repository</li>
+                        <li><strong>Good Balance:</strong> Includes both benign (70.6%) and malignant (29.4%) cases</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Citation</h2>
+                <div class="section-content">
+                    <p><strong>Dataset Access:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://data.mendeley.com/datasets/mhrt4svjxc/3" target="_blank">Mendeley Data Repository (Version 3)</a></li>
+                        <li><a href="https://www.sciencedirect.com/science/article/pii/S2352340924004724" target="_blank">Dataset Description Paper (Data in Brief, 2024)</a></li>
+                    </ul>
+                    <p><strong>Supporting Institutions:</strong></p>
+                    <ul>
+                        <li>Universidad Nacional Abierta y a Distancia (UNAD)</li>
+                        <li>Hospital San Juan de Dios de Cali</li>
+                        <li>Universidad del Valle</li>
+                        <li>Perception and Intelligent Systems Laboratory (PSI)</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Citation:</strong> Rodriguez-Guerrero, S., Loaiza-Correa, H., & Restrepo-Girón, A.D. (2024). 
+                            Dataset of breast thermography images for the detection of benign and malignant masses. 
+                            Data in Brief, 54, 110503. DOI: 10.17632/mhrt4svjxc.3
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Limitations & Future Directions</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Dataset Size:</strong> Smaller than DMR-IR (119 vs 293 patients), may benefit from augmentation</li>
+                        <li><strong>Camera Resolution:</strong> 320×240 pixels lower than American Standard recommendation</li>
+                        <li><strong>Geographic Diversity:</strong> Single institution in Colombia, may not represent global populations</li>
+                        <li><strong>Static Protocol:</strong> Does not include dynamic cooling protocol like DMR-IR</li>
+                        <li><strong>Demographic Details:</strong> Limited demographic breakdown beyond age range</li>
+                    </ul>
+                    <p><strong>Recommended Use Cases:</strong></p>
+                    <ul>
+                        <li>Transfer learning from models trained on DMR-IR</li>
+                        <li>Multi-view analysis research</li>
+                        <li>Combined dataset studies with DMR-IR for increased diversity</li>
+                        <li>Validation of models trained on other datasets</li>
+                        <li>Benign vs. malignant classification research</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- OpenThermalPose Detail View -->
+        <div id="openthermalpose-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-research">Research - Pose Estimation</span>
+                <h1 class="detail-title">OpenThermalPose Dataset</h1>
+                <p class="detail-subtitle">Open-Source Annotated Thermal Human Pose Dataset</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Institution</div>
+                        <div class="meta-value">IS2AI Lab, Nazarbayev University</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Year Released</div>
+                        <div class="meta-value">2024</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">License</div>
+                        <div class="meta-value">Open Source</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">GitHub</div>
+                        <div class="meta-value">IS2AI/OpenThermalPose</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        OpenThermalPose is a pioneering open-source thermal human pose estimation dataset that addresses 
+                        critical challenges in computer vision, particularly insufficient illumination and privacy concerns 
+                        that plague visible-domain pose estimation systems.
+                    </p>
+                    <p>
+                        The dataset was created by the Intelligent Systems and Signal Processing (IS2AI) Laboratory at 
+                        Nazarbayev University, Kazakhstan. It provides comprehensive annotations following the MS COCO 
+                        keypoint format, making it immediately compatible with existing pose estimation frameworks and models.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Key Innovation:</strong> First major open-source thermal pose dataset with comprehensive 
+                            COCO-format annotations, enabling privacy-preserving human pose estimation that works in 
+                            complete darkness and challenging lighting conditions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Specifications</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Images</div>
+                        <div class="param-value">6,090</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Subjects</div>
+                        <div class="param-value">31</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Annotated Instances</div>
+                        <div class="param-value">14,315</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Keypoints</div>
+                        <div class="param-value">17 anatomical</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Annotation Format</div>
+                        <div class="param-value">MS COCO</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Bounding Boxes</div>
+                        <div class="param-value">14,315</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Activity Types</div>
+                        <div class="param-value">Multiple</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Image Format</div>
+                        <div class="param-value">PNG</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">17 COCO Keypoint Annotations</h2>
+                <div class="section-content">
+                    <p>
+                        Each human instance is annotated with 17 anatomical keypoints following the MS COCO format:
+                    </p>
+                    <div class="protocols-grid">
+                        <div class="protocol-card">
+                            <div class="protocol-title">Upper Body (5)</div>
+                            <div class="protocol-desc">
+                                Nose, Left Eye, Right Eye, Left Ear, Right Ear
+                            </div>
+                        </div>
+                        <div class="protocol-card">
+                            <div class="protocol-title">Shoulders (2)</div>
+                            <div class="protocol-desc">
+                                Left Shoulder, Right Shoulder
+                            </div>
+                        </div>
+                        <div class="protocol-card">
+                            <div class="protocol-title">Arms (4)</div>
+                            <div class="protocol-desc">
+                                Left Elbow, Right Elbow, Left Wrist, Right Wrist
+                            </div>
+                        </div>
+                        <div class="protocol-card">
+                            <div class="protocol-title">Core & Legs (6)</div>
+                            <div class="protocol-desc">
+                                Left Hip, Right Hip, Left Knee, Right Knee, Left Ankle, Right Ankle
+                            </div>
+                        </div>
+                    </div>
+                    <p>
+                        This standardized format ensures compatibility with popular frameworks like YOLOv8-pose, 
+                        YOLO11-pose, and other COCO-based pose estimation models.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Coverage</h2>
+                <div class="section-content">
+                    <p>
+                        The dataset captures diverse scenarios to ensure model robustness:
+                    </p>
+                    <ul>
+                        <li><strong>Fitness Exercises:</strong> Various workout poses and movements</li>
+                        <li><strong>Multi-Person Scenes:</strong> Multiple humans interacting in single frames</li>
+                        <li><strong>Outdoor Walking:</strong> Natural gait and movement patterns</li>
+                        <li><strong>Different Locations:</strong> Indoor and outdoor environments</li>
+                        <li><strong>Weather Conditions:</strong> Various ambient temperature scenarios</li>
+                        <li><strong>Lighting Conditions:</strong> From complete darkness to daylight</li>
+                        <li><strong>Occlusion Scenarios:</strong> Partial body occlusions and challenging poses</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Baseline Models & Performance</h2>
+                <div class="section-content">
+                    <p>
+                        The authors provide pre-trained YOLOv8-pose models as baselines:
+                    </p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Size</th>
+                                <th>Parameters</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>YOLOv8n-pose</td>
+                                <td>Nano</td>
+                                <td>~3.2M</td>
+                                <td>Edge devices, mobile</td>
+                            </tr>
+                            <tr>
+                                <td>YOLOv8s-pose</td>
+                                <td>Small</td>
+                                <td>~11.6M</td>
+                                <td>Balanced performance</td>
+                            </tr>
+                            <tr>
+                                <td>YOLOv8m-pose</td>
+                                <td>Medium</td>
+                                <td>~26.4M</td>
+                                <td>Higher accuracy</td>
+                            </tr>
+                            <tr>
+                                <td>YOLOv8l-pose</td>
+                                <td>Large</td>
+                                <td>~43.7M</td>
+                                <td>Best accuracy</td>
+                            </tr>
+                            <tr>
+                                <td>YOLOv8x-pose</td>
+                                <td>X-Large</td>
+                                <td>~68.9M</td>
+                                <td>Maximum performance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>
+                        All models are trained from scratch on the thermal dataset and are available for download 
+                        with full training configurations.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Applications</h2>
+                <div class="section-content">
+                    <p>
+                        The dataset enables various privacy-preserving and low-light applications:
+                    </p>
+                </div>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">Healthcare</div>
+                        <div class="protocol-desc">
+                            Patient monitoring, fall detection, rehabilitation assessment without compromising privacy
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Human-Robot Interaction</div>
+                        <div class="protocol-desc">
+                            Robot navigation in human environments, collaborative robotics, gesture recognition
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Sports Analytics</div>
+                        <div class="protocol-desc">
+                            Athlete performance analysis, movement quality assessment, training optimization
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Security & Surveillance</div>
+                        <div class="protocol-desc">
+                            Privacy-preserving monitoring, night-time surveillance, intrusion detection
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Augmented Reality</div>
+                        <div class="protocol-desc">
+                            Low-light AR experiences, thermal-based interaction, environmental adaptation
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Motion Capture</div>
+                        <div class="protocol-desc">
+                            Game development, animation, biomechanics research without markers
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Technical Implementation</h2>
+                <div class="section-content">
+                    <p><strong>Dataset Structure:</strong></p>
+                    <ul>
+                        <li><strong>Train/Val/Test Split:</strong> Standard splits provided</li>
+                        <li><strong>Image Format:</strong> PNG (lossless thermal image storage)</li>
+                        <li><strong>Label Format:</strong> TXT files (YOLO format) and JSON (COCO format)</li>
+                        <li><strong>YAML Configuration:</strong> Ready-to-use training configuration files</li>
+                    </ul>
+                    <p><strong>Easy Integration:</strong></p>
+                    <div class="highlight-box">
+                        <p>
+                            The dataset can be directly used with Ultralytics YOLO framework. Simply point to the 
+                            provided YAML file and start training. Pre-trained models are available for immediate use 
+                            or fine-tuning on custom thermal pose datasets.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Resources</h2>
+                <div class="section-content">
+                    <p><strong>GitHub Repository:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://github.com/IS2AI/OpenThermalPose" target="_blank">Official GitHub Repository</a></li>
+                        <li><a href="https://ieeexplore.ieee.org/document/10581992" target="_blank">IEEE FG 2024 Paper</a></li>
+                    </ul>
+                    <p><strong>What's Included:</strong></p>
+                    <ul>
+                        <li>Complete annotated dataset (train/val/test)</li>
+                        <li>Pre-trained YOLOv8-pose models (all sizes)</li>
+                        <li>Training scripts and configuration files</li>
+                        <li>Evaluation metrics and benchmarks</li>
+                        <li>Documentation and usage examples</li>
+                        <li>Data loading utilities</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Citation:</strong> Kuzdeuov, A., Taratynova, D., Tleuliyev, A., & Varol, H. A. (2024). 
+                            OpenThermalPose: An Open-Source Annotated Thermal Human Pose Dataset and Initial YOLOv8-Pose Baselines. 
+                            IEEE FG 2024. DOI: 10.1109/FG59268.2024.10581992
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Advantages & Future Extensions</h2>
+                <div class="section-content">
+                    <p><strong>Key Advantages:</strong></p>
+                    <ul>
+                        <li><strong>Privacy-Preserving:</strong> Thermal imaging obscures facial features and identity</li>
+                        <li><strong>Illumination-Invariant:</strong> Works equally well in darkness and bright light</li>
+                        <li><strong>Open Source:</strong> Free access to data, code, and models</li>
+                        <li><strong>Standard Format:</strong> COCO compatibility enables wide framework support</li>
+                        <li><strong>Diverse Scenarios:</strong> Multiple activities, locations, and conditions</li>
+                        <li><strong>Ready-to-Use:</strong> Pre-trained models and complete pipeline provided</li>
+                    </ul>
+                    <p><strong>See Also: OpenThermalPose2</strong></p>
+                    <p>
+                        An extended version (OpenThermalPose2) is now available with 11,391 images of 170 subjects and 
+                        21,125 annotated instances—nearly double the original dataset size with even more diverse poses 
+                        and scenarios.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional detail views for other datasets would follow the same pattern -->
+        <!-- For brevity, I'll create simplified versions -->
+
+        <div id="openthermalpose2-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-research">Research - Pose Estimation</span>
+                <h1 class="detail-title">OpenThermalPose2</h1>
+                <p class="detail-subtitle">Extended Open-Source Thermal Pose Dataset</p>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        OpenThermalPose2 is the extended version of the original OpenThermalPose dataset, featuring 
+                        nearly double the data, subjects, and pose variations. It represents the most comprehensive 
+                        open-source thermal human pose dataset available.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Major Expansion:</strong> From 6,090 images to 11,391 images (+87%), from 31 to 170 
+                            subjects (+448%), and from 14,315 to 21,125 instances (+48%).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">What's New in Version 2</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">More Images</div>
+                        <div class="param-value">+5,301</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">More Subjects</div>
+                        <div class="param-value">+139</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">More Instances</div>
+                        <div class="param-value">+6,810</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">New Models</div>
+                        <div class="param-value">YOLO11-pose</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Enhanced Coverage</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>More Fitness Exercises:</strong> Expanded variety of workout poses</li>
+                        <li><strong>More Multi-Person Scenes:</strong> Complex interactions and group activities</li>
+                        <li><strong>More Locations:</strong> Additional indoor and outdoor environments</li>
+                        <li><strong>More Weather Conditions:</strong> Extended seasonal and temperature variations</li>
+                        <li><strong>More Challenging Poses:</strong> Difficult occlusions and body configurations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Performance Improvements</h2>
+                <div class="section-content">
+                    <p>
+                        Models trained on OpenThermalPose2 consistently outperform those trained on the original dataset:
+                    </p>
+                    <ul>
+                        <li>Better generalization to unseen scenarios</li>
+                        <li>Improved accuracy on challenging poses</li>
+                        <li>Enhanced multi-person tracking</li>
+                        <li>Reduced false positives in cluttered scenes</li>
+                    </ul>
+                    <p>
+                        The dataset now includes both YOLOv8-pose and YOLO11-pose baseline models, with TensorRT 
+                        optimized versions for real-time deployment on NVIDIA Jetson devices.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Citation</h2>
+                <div class="section-content">
+                    <ul class="link-list">
+                        <li><a href="https://github.com/IS2AI/OpenThermalPose" target="_blank">GitHub Repository (includes v2)</a></li>
+                        <li><a href="https://ieee-dataport.org/documents/openthermalpose2" target="_blank">IEEE DataPort</a></li>
+                        <li><a href="https://huggingface.co/datasets/issai/OpenThermalPose2" target="_blank">Hugging Face Datasets</a></li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Recommended:</strong> For new projects, use OpenThermalPose2 for better performance. 
+                            The original OpenThermalPose is still valuable for comparison studies and when computational 
+                            resources are limited.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simplified detail views for remaining datasets -->
+        <div id="faceoral-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-medical">Medical - Facial Thermography</span>
+                <h1 class="detail-title">Face-Oral Temperature Thermal Dataset</h1>
+                <p class="detail-subtitle">Large-Scale Multi-Modal Facial Temperature Screening Dataset</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Platform</div>
+                        <div class="meta-value">PhysioNet</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Subjects</div>
+                        <div class="meta-value">1,000+</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Modalities</div>
+                        <div class="meta-value">Thermal + Visible</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Application</div>
+                        <div class="meta-value">Fever Screening</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        This comprehensive dataset from PhysioNet provides thermal and visible facial images paired 
+                        with oral temperature measurements from over 1,000 subjects. It was specifically designed for 
+                        developing and validating automated temperature screening systems, particularly relevant for 
+                        pandemic response, fever detection at entry points, and public health monitoring applications.
+                    </p>
+                    <p>
+                        The dataset addresses the critical need for non-contact temperature screening methods by providing 
+                        ground truth oral temperature measurements alongside facial thermal and visible images. This 
+                        pairing enables researchers to develop algorithms that can accurately predict core body temperature 
+                        from facial thermal signatures, a crucial capability for high-throughput screening scenarios.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Critical Application:</strong> This dataset became especially valuable during the 
+                            COVID-19 pandemic for developing contactless fever screening systems at airports, hospitals, 
+                            offices, and public venues. It provides the ground truth data necessary for validating 
+                            thermal camera accuracy for health screening.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Specifications</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Subjects</div>
+                        <div class="param-value">1,000+</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Image Types</div>
+                        <div class="param-value">2 (Thermal+RGB)</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Temperature Ref</div>
+                        <div class="param-value">Oral Ground Truth</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Region Focus</div>
+                        <div class="param-value">Facial/Oral</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Diversity</div>
+                        <div class="param-value">Multi-ethnic</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Platform</div>
+                        <div class="param-value">PhysioNet</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Access</div>
+                        <div class="param-value">Open</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Format</div>
+                        <div class="param-value">Paired Images</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Multi-Modal Data Collection</h2>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">Thermal Facial Images</div>
+                        <div class="protocol-desc">
+                            Infrared thermal images capturing facial heat signatures, particularly focusing on 
+                            high-temperature regions like inner canthi (eye corners), forehead, and nose area 
+                            which correlate with core body temperature.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Visible Light Images</div>
+                        <div class="protocol-desc">
+                            Standard RGB photographs of the same subjects, enabling facial feature detection, 
+                            demographic analysis, and correlation between visual appearance and thermal signatures.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Oral Temperature</div>
+                        <div class="protocol-desc">
+                            Gold-standard oral thermometer measurements taken as ground truth reference. Provides 
+                            accurate core body temperature for validating thermal imaging predictions.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Metadata</div>
+                        <div class="protocol-desc">
+                            Subject demographics, ambient conditions, time of measurement, and other contextual 
+                            information that may affect temperature readings and thermal signatures.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Key Applications</h2>
+                <div class="section-content">
+                    <p><strong>Public Health Screening:</strong></p>
+                    <ul>
+                        <li><strong>Fever Detection:</strong> Identify individuals with elevated temperature at entry points</li>
+                        <li><strong>Mass Screening:</strong> Non-contact temperature assessment in crowds</li>
+                        <li><strong>Pandemic Response:</strong> First-line screening for infectious diseases</li>
+                        <li><strong>Healthcare Facilities:</strong> Pre-screening patients and visitors</li>
+                    </ul>
+                    <p><strong>Infrastructure Deployment:</strong></p>
+                    <ul>
+                        <li><strong>Airports & Borders:</strong> International traveler screening</li>
+                        <li><strong>Office Buildings:</strong> Employee health monitoring at entrances</li>
+                        <li><strong>Schools & Universities:</strong> Student screening for illness</li>
+                        <li><strong>Event Venues:</strong> Large gathering temperature checks</li>
+                    </ul>
+                    <p><strong>Research & Development:</strong></p>
+                    <ul>
+                        <li><strong>Algorithm Validation:</strong> Test accuracy of thermal screening systems</li>
+                        <li><strong>ROI Optimization:</strong> Identify best facial regions for temperature estimation</li>
+                        <li><strong>Multi-Modal Fusion:</strong> Combine thermal and visible data for improved accuracy</li>
+                        <li><strong>Calibration Studies:</strong> Understand environmental and demographic factors</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Thermal Screening Methodology</h2>
+                <div class="section-content">
+                    <p><strong>Optimal Facial ROIs for Temperature:</strong></p>
+                    <ul>
+                        <li><strong>Inner Canthi:</strong> Corners of eyes near nose - most reliable for core temperature</li>
+                        <li><strong>Forehead:</strong> Large area, but affected by environmental factors</li>
+                        <li><strong>Periorbital Region:</strong> Area around eyes with consistent thermal patterns</li>
+                        <li><strong>Nose Tip:</strong> Alternative region, though more variable</li>
+                    </ul>
+                    <p><strong>Factors Affecting Accuracy:</strong></p>
+                    <ul>
+                        <li><strong>Ambient Temperature:</strong> Environmental conditions impact facial temperatures</li>
+                        <li><strong>Recent Activity:</strong> Physical exertion elevates skin temperature</li>
+                        <li><strong>Facial Accessories:</strong> Glasses, hats, scarves obstruct thermal imaging</li>
+                        <li><strong>Distance & Angle:</strong> Camera positioning affects measurement accuracy</li>
+                        <li><strong>Skin Emissivity:</strong> Varies with skin tone and moisture</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Important Note:</strong> Thermal screening is a preliminary tool for identifying 
+                            potentially febrile individuals. Positive thermal screens should be confirmed with 
+                            clinical-grade thermometers. This dataset helps understand the correlation and limitations 
+                            of thermal screening.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Advantages</h2>
+                <div class="section-content">
+                    <p><strong>Large Scale:</strong></p>
+                    <ul>
+                        <li>Over 1,000 subjects provide statistical significance</li>
+                        <li>Diverse population for generalization testing</li>
+                        <li>Multiple conditions and variations captured</li>
+                    </ul>
+                    <p><strong>Ground Truth Reference:</strong></p>
+                    <ul>
+                        <li>Oral temperature gold standard for validation</li>
+                        <li>Quantitative accuracy assessment possible</li>
+                        <li>Enables calibration of thermal systems</li>
+                    </ul>
+                    <p><strong>Multi-Modal Data:</strong></p>
+                    <ul>
+                        <li>Thermal and visible images for fusion approaches</li>
+                        <li>Facial features help with region detection</li>
+                        <li>Enables demographic correlation studies</li>
+                    </ul>
+                    <p><strong>PhysioNet Platform:</strong></p>
+                    <ul>
+                        <li>Trusted medical research repository</li>
+                        <li>Standardized access and documentation</li>
+                        <li>Community of medical researchers</li>
+                        <li>Version control and reproducibility</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Research Opportunities</h2>
+                <div class="section-content">
+                    <p><strong>Algorithm Development:</strong></p>
+                    <ul>
+                        <li>Develop automated ROI detection for optimal temperature regions</li>
+                        <li>Create regression models for core temperature prediction</li>
+                        <li>Build classification systems for fever/no-fever detection</li>
+                        <li>Implement compensation for environmental factors</li>
+                    </ul>
+                    <p><strong>Multi-Modal Learning:</strong></p>
+                    <ul>
+                        <li>Fuse thermal and visible data for improved accuracy</li>
+                        <li>Use facial landmarks from RGB for thermal ROI guidance</li>
+                        <li>Develop attention mechanisms focusing on relevant facial regions</li>
+                        <li>Cross-modal feature learning and domain adaptation</li>
+                    </ul>
+                    <p><strong>Clinical Studies:</strong></p>
+                    <ul>
+                        <li>Validate thermal screening sensitivity and specificity</li>
+                        <li>Study demographic variations in thermal patterns</li>
+                        <li>Analyze effect of ambient conditions on accuracy</li>
+                        <li>Develop clinical guidelines for thermal screening</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Technical Considerations</h2>
+                <div class="section-content">
+                    <p><strong>Camera Requirements:</strong></p>
+                    <ul>
+                        <li>Thermal sensitivity: ≤0.05°C recommended for medical screening</li>
+                        <li>Resolution: Higher resolution for better ROI detection</li>
+                        <li>Calibration: Regular calibration against blackbody reference</li>
+                        <li>Field of view: Appropriate for facial capture at screening distance</li>
+                    </ul>
+                    <p><strong>Processing Pipeline:</strong></p>
+                    <ul>
+                        <li><strong>Face Detection:</strong> Locate face in thermal or visible image</li>
+                        <li><strong>ROI Extraction:</strong> Identify optimal temperature measurement regions</li>
+                        <li><strong>Temperature Calculation:</strong> Extract max/mean temperature from ROI</li>
+                        <li><strong>Compensation:</strong> Adjust for ambient conditions if needed</li>
+                        <li><strong>Classification/Regression:</strong> Predict core temperature or fever status</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Comparison with Other Modalities</h2>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Contact</th>
+                                <th>Speed</th>
+                                <th>Accuracy</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Thermal Facial</td>
+                                <td>❌ Non-contact</td>
+                                <td>✅ Fast (instant)</td>
+                                <td>⚠️ Moderate</td>
+                                <td>Mass screening</td>
+                            </tr>
+                            <tr>
+                                <td>Oral Thermometer</td>
+                                <td>✅ Contact</td>
+                                <td>⚠️ Slow (30-60s)</td>
+                                <td>✅ High</td>
+                                <td>Clinical gold standard</td>
+                            </tr>
+                            <tr>
+                                <td>Forehead Scanner</td>
+                                <td>⚠️ Close proximity</td>
+                                <td>✅ Fast (2-3s)</td>
+                                <td>✅ Good</td>
+                                <td>Clinical/home use</td>
+                            </tr>
+                            <tr>
+                                <td>Tympanic (Ear)</td>
+                                <td>✅ Contact</td>
+                                <td>✅ Fast (1-2s)</td>
+                                <td>✅ Good</td>
+                                <td>Clinical use</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Usage</h2>
+                <div class="section-content">
+                    <p><strong>Dataset Access:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://physionet.org/content/face-oral-temp-data/" target="_blank">PhysioNet Repository - Official Access</a></li>
+                    </ul>
+                    <p><strong>PhysioNet Registration:</strong></p>
+                    <ul>
+                        <li>Free registration required for PhysioNet access</li>
+                        <li>Complete credentialing for some restricted datasets</li>
+                        <li>Agree to data use agreements</li>
+                        <li>Cite properly in publications</li>
+                    </ul>
+                    <p><strong>What's Included:</strong></p>
+                    <ul>
+                        <li>Thermal facial images in standard format</li>
+                        <li>Visible light photographs</li>
+                        <li>Oral temperature measurements</li>
+                        <li>Subject demographic information</li>
+                        <li>Capture metadata (time, conditions)</li>
+                        <li>Documentation and data dictionary</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Citation:</strong> When using this dataset, please cite according to PhysioNet 
+                            guidelines. Proper citation helps maintain this valuable research resource and acknowledges 
+                            the contributors' efforts in data collection and curation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Limitations & Best Practices</h2>
+                <div class="section-content">
+                    <p><strong>Known Limitations:</strong></p>
+                    <ul>
+                        <li><strong>Environmental Sensitivity:</strong> Facial temperatures affected by ambient conditions</li>
+                        <li><strong>Individual Variation:</strong> Baseline temperatures vary between people</li>
+                        <li><strong>Accessory Interference:</strong> Glasses, masks can obstruct thermal readings</li>
+                        <li><strong>Distance Dependency:</strong> Accuracy decreases with distance from camera</li>
+                        <li><strong>Not Diagnostic:</strong> Screening tool only, not for medical diagnosis</li>
+                    </ul>
+                    <p><strong>Best Practices for Use:</strong></p>
+                    <ul>
+                        <li>Use as first-line screening, confirm with clinical thermometer</li>
+                        <li>Control environment when possible (avoid drafts, direct sun)</li>
+                        <li>Allow subjects to acclimate to environment before measurement</li>
+                        <li>Set appropriate thresholds based on validation studies</li>
+                        <li>Regular calibration and system validation</li>
+                        <li>Train operators on proper use and limitations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Future Research Directions</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Deep Learning ROI Detection:</strong> Automated optimal region identification</li>
+                        <li><strong>Environmental Compensation:</strong> ML models to adjust for ambient factors</li>
+                        <li><strong>Individual Baseline Learning:</strong> Personalized temperature profiles</li>
+                        <li><strong>Multi-Camera Fusion:</strong> Combine multiple views for robustness</li>
+                        <li><strong>Temporal Analysis:</strong> Track temperature changes over time</li>
+                        <li><strong>Integration with Symptoms:</strong> Combine thermal with other health indicators</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="lwirpose-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-research">Research - Paired RGB-Thermal</span>
+                <h1 class="detail-title">LWIRPOSE Dataset</h1>
+                <p class="detail-subtitle">Long-Wave Infrared RGB-Thermal Paired 2D Human Pose Dataset</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Institution</div>
+                        <div class="meta-value">Research Collaboration</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Year Released</div>
+                        <div class="meta-value">2024</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">License</div>
+                        <div class="meta-value">Open Source</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Format</div>
+                        <div class="meta-value">Paired RGB-LWIR</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        LWIRPOSE is a novel dataset that bridges the gap between RGB and Long-Wave Infrared (LWIR) thermal 
+                        imaging for 2D human pose estimation. It provides nearly aligned RGB-Thermal image pairs with 
+                        comprehensive 2D human pose annotations, enabling research in cross-modal learning and multi-spectral 
+                        pose estimation.
+                    </p>
+                    <p>
+                        The dataset addresses the critical challenge of limited annotated thermal pose data by providing 
+                        paired visible and thermal images. This pairing allows researchers to leverage knowledge from 
+                        well-established RGB pose estimation models and transfer it to the thermal domain.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Key Innovation:</strong> First publicly available RGB-LWIR paired dataset specifically 
+                            designed for 2D human pose estimation, enabling cross-modal transfer learning and domain 
+                            adaptation research.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Specifications</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">LWIR Images</div>
+                        <div class="param-value">2,400+</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">RGB Images</div>
+                        <div class="param-value">2,400+</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Alignment</div>
+                        <div class="param-value">Nearly Paired</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Pose Type</div>
+                        <div class="param-value">2D Keypoints</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Annotation Style</div>
+                        <div class="param-value">Human Pose</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Modalities</div>
+                        <div class="param-value">Dual (RGB+LWIR)</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Dataset Size</div>
+                        <div class="param-value">Medium</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Calibration</div>
+                        <div class="param-value">Spatial Aligned</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Characteristics</h2>
+                <div class="section-content">
+                    <p><strong>Pairing Strategy:</strong></p>
+                    <ul>
+                        <li><strong>Nearly Aligned:</strong> RGB and LWIR cameras positioned to capture same scene from similar viewpoints</li>
+                        <li><strong>Temporal Synchronization:</strong> Images captured at same time instances</li>
+                        <li><strong>Spatial Correspondence:</strong> Careful calibration ensures pixel-level correspondence</li>
+                        <li><strong>Shared Annotations:</strong> Same 2D pose annotations applicable to both modalities</li>
+                    </ul>
+                    <p><strong>Pose Annotation Details:</strong></p>
+                    <ul>
+                        <li>2D anatomical keypoints for human joints</li>
+                        <li>Bounding boxes for person detection</li>
+                        <li>Occlusion and visibility flags</li>
+                        <li>Quality control through manual verification</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Research Applications</h2>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">Cross-Modal Pose Estimation</div>
+                        <div class="protocol-desc">
+                            Train models on RGB data and transfer to thermal domain, or vice versa, enabling 
+                            pose estimation in challenging lighting conditions.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Domain Adaptation</div>
+                        <div class="protocol-desc">
+                            Study how models trained on one modality can adapt to another, crucial for 
+                            deploying systems across different sensor types.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Multi-Modal Fusion</div>
+                        <div class="protocol-desc">
+                            Combine RGB and thermal features for improved pose estimation accuracy, 
+                            leveraging complementary information from both modalities.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Low-Light Performance</div>
+                        <div class="protocol-desc">
+                            Use thermal data to maintain pose estimation accuracy when RGB cameras fail 
+                            due to poor lighting or complete darkness.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Advantages for Research</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Paired Data:</strong> Enables supervised cross-modal learning approaches</li>
+                        <li><strong>Benchmark for Transfer Learning:</strong> Test RGB-to-thermal and thermal-to-RGB transfer</li>
+                        <li><strong>Complementary Information:</strong> RGB captures texture/color, thermal captures heat signatures</li>
+                        <li><strong>Real-World Scenarios:</strong> Demonstrates practical multi-modal sensing systems</li>
+                        <li><strong>Smaller Scale:</strong> Manageable size for rapid prototyping and experiments</li>
+                        <li><strong>Focus on Pose:</strong> Specifically designed for pose estimation, not general detection</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Technical Considerations</h2>
+                <div class="section-content">
+                    <p><strong>Camera Setup:</strong></p>
+                    <ul>
+                        <li>Dual-camera rig with RGB and LWIR sensors</li>
+                        <li>Calibrated for geometric alignment</li>
+                        <li>Synchronized capture to minimize temporal differences</li>
+                        <li>Fixed relative positions for consistent pairing</li>
+                    </ul>
+                    <p><strong>Alignment Challenges:</strong></p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Note:</strong> While images are "nearly paired," perfect pixel-level alignment is 
+                            challenging due to different camera specifications, field of view, and physical constraints. 
+                            Researchers should account for slight misalignments in their approaches.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Comparison with Other Datasets</h2>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>LWIRPOSE</th>
+                                <th>OpenThermalPose</th>
+                                <th>RGB Datasets</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Modality</td>
+                                <td>RGB + LWIR Paired</td>
+                                <td>LWIR Only</td>
+                                <td>RGB Only</td>
+                            </tr>
+                            <tr>
+                                <td>Size</td>
+                                <td>~2,400 pairs</td>
+                                <td>6,090 thermal</td>
+                                <td>100K+ (COCO)</td>
+                            </tr>
+                            <tr>
+                                <td>Use Case</td>
+                                <td>Cross-modal learning</td>
+                                <td>Thermal pose</td>
+                                <td>RGB pose</td>
+                            </tr>
+                            <tr>
+                                <td>Alignment</td>
+                                <td>Spatially paired</td>
+                                <td>N/A</td>
+                                <td>N/A</td>
+                            </tr>
+                            <tr>
+                                <td>Best For</td>
+                                <td>Transfer learning</td>
+                                <td>Pure thermal</td>
+                                <td>Well-lit scenes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Recommended Use Cases</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Transfer Learning Research:</strong> Study how RGB models transfer to thermal domain</li>
+                        <li><strong>Multi-Modal Fusion:</strong> Combine RGB and thermal features for robust pose estimation</li>
+                        <li><strong>Domain Gap Analysis:</strong> Quantify differences between RGB and thermal pose estimation</li>
+                        <li><strong>Sensor Selection Studies:</strong> Evaluate when to use RGB vs. thermal vs. both</li>
+                        <li><strong>Adaptation Techniques:</strong> Test unsupervised and semi-supervised adaptation methods</li>
+                        <li><strong>Baseline Comparisons:</strong> Establish RGB-thermal benchmarks for future work</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Citation</h2>
+                <div class="section-content">
+                    <p><strong>Dataset Access:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://github.com/avinres/LWIRPOSE" target="_blank">GitHub Repository - Official</a></li>
+                        <li><a href="https://arxiv.org/abs/2404.10212" target="_blank">arXiv Paper - Technical Details</a></li>
+                    </ul>
+                    <p><strong>What's Included:</strong></p>
+                    <ul>
+                        <li>RGB image files</li>
+                        <li>LWIR thermal image files</li>
+                        <li>2D pose annotations in standard format</li>
+                        <li>Camera calibration parameters</li>
+                        <li>Train/validation/test splits</li>
+                        <li>Documentation and usage examples</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Citation:</strong> When using this dataset, please cite the LWIRPOSE paper and 
+                            acknowledge the paired nature of the data. Proper citation helps support continued 
+                            development of multi-modal datasets.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Limitations & Future Directions</h2>
+                <div class="section-content">
+                    <p><strong>Current Limitations:</strong></p>
+                    <ul>
+                        <li><strong>Scale:</strong> Smaller than pure RGB or thermal-only datasets</li>
+                        <li><strong>Diversity:</strong> Limited number of subjects and scenarios</li>
+                        <li><strong>Alignment:</strong> Not perfectly aligned at pixel level</li>
+                        <li><strong>Indoor Bias:</strong> May have limited outdoor/varying weather conditions</li>
+                    </ul>
+                    <p><strong>Future Research Opportunities:</strong></p>
+                    <ul>
+                        <li>Expand dataset with more subjects and diverse scenarios</li>
+                        <li>Improve alignment through better calibration techniques</li>
+                        <li>Add temporal sequences for video-based pose estimation</li>
+                        <li>Include depth information for 3D pose estimation</li>
+                        <li>Capture in varying environmental conditions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="iphpdt-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-research">Research - Posture Detection</span>
+                <h1 class="detail-title">IPHPDT Dataset</h1>
+                <p class="detail-subtitle">Identity-Preserved Human Posture Detection in Infrared Thermal Images</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Published</div>
+                        <div class="meta-value">MDPI Sensors, 2023</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Scale</div>
+                        <div class="meta-value">~75,000 images</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Focus</div>
+                        <div class="meta-value">Privacy-Preserving</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Postures</div>
+                        <div class="meta-value">4 Categories</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        IPHPDT (Identity-Preserved Human Posture Detection in Thermal Images) is a large-scale infrared 
+                        thermal dataset specifically designed for privacy-preserving human posture recognition. With 
+                        approximately 75,000 images, it represents one of the largest publicly documented thermal datasets 
+                        focused on activity recognition and posture classification.
+                    </p>
+                    <p>
+                        The dataset addresses critical privacy concerns in surveillance and monitoring systems by using 
+                        thermal imaging, which naturally obscures facial features and personal identifying characteristics 
+                        while maintaining the ability to recognize human postures and activities. This makes it particularly 
+                        valuable for healthcare, elderly care, and smart home applications where privacy is paramount.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Privacy Innovation:</strong> Thermal imaging provides identity preservation by design - 
+                            human subjects cannot be visually identified while their postures and movements remain clearly 
+                            detectable, solving a critical ethical challenge in monitoring systems.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Specifications</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Images</div>
+                        <div class="param-value">~75,000</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Posture Classes</div>
+                        <div class="param-value">4</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Imaging Type</div>
+                        <div class="param-value">Infrared Thermal</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Environment</div>
+                        <div class="param-value">Indoor</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Viewpoints</div>
+                        <div class="param-value">Multiple</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Subjects</div>
+                        <div class="param-value">Multiple</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Year</div>
+                        <div class="param-value">2023</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Application</div>
+                        <div class="param-value">Healthcare</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Four Posture Categories</h2>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">Standing</div>
+                        <div class="protocol-desc">
+                            Upright standing position with various arm positions and orientations. Includes 
+                            natural standing variations, different body orientations relative to camera.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Sitting</div>
+                        <div class="protocol-desc">
+                            Seated posture on various surfaces (chairs, floor, benches). Multiple sitting 
+                            styles captured including upright sitting, relaxed sitting, and cross-legged.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Lying</div>
+                        <div class="protocol-desc">
+                            Horizontal lying positions including supine (face-up), prone (face-down), and 
+                            side-lying. Critical for fall detection and sleep monitoring applications.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Bending</div>
+                        <div class="protocol-desc">
+                            Forward bending and crouching postures. Important for detecting falls in progress, 
+                            picking up objects, and transitional movements between other postures.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Privacy-Preserving Features</h2>
+                <div class="section-content">
+                    <p><strong>Why Thermal Imaging for Privacy:</strong></p>
+                    <ul>
+                        <li><strong>No Facial Features:</strong> Thermal cameras detect heat signatures, not visual details - faces are not recognizable</li>
+                        <li><strong>No Clothing Details:</strong> Personal clothing, accessories, and identifying marks are not visible</li>
+                        <li><strong>No Skin Tone:</strong> Racial and ethnic characteristics are not captured</li>
+                        <li><strong>Universal Heat Signature:</strong> All humans appear similar thermally regardless of appearance</li>
+                        <li><strong>Darkness Operation:</strong> Works in complete darkness, allowing monitoring without intrusive lighting</li>
+                        <li><strong>GDPR Compliant:</strong> Inherently privacy-preserving, reducing regulatory concerns</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Healthcare Impact:</strong> This privacy-by-design approach enables continuous monitoring 
+                            of elderly patients, hospital patients, or individuals with disabilities without the ethical 
+                            concerns associated with traditional video surveillance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Applications & Use Cases</h2>
+                <div class="section-content">
+                    <p><strong>Healthcare & Medical:</strong></p>
+                    <ul>
+                        <li><strong>Fall Detection:</strong> Real-time detection of falls in elderly care facilities</li>
+                        <li><strong>Patient Monitoring:</strong> Track posture changes in hospital beds</li>
+                        <li><strong>Rehabilitation:</strong> Monitor patient exercises and posture compliance</li>
+                        <li><strong>Sleep Studies:</strong> Analyze sleep postures without disturbing patients</li>
+                    </ul>
+                    <p><strong>Smart Home & Assisted Living:</strong></p>
+                    <ul>
+                        <li><strong>Activity Recognition:</strong> Understand daily living activities</li>
+                        <li><strong>Emergency Detection:</strong> Detect unusual postures indicating distress</li>
+                        <li><strong>Energy Management:</strong> Occupancy detection for HVAC and lighting</li>
+                        <li><strong>Security:</strong> Intrusion detection without privacy concerns</li>
+                    </ul>
+                    <p><strong>Research Applications:</strong></p>
+                    <ul>
+                        <li><strong>Activity Recognition Algorithms:</strong> Train and test classification models</li>
+                        <li><strong>Privacy-Preserving AI:</strong> Develop ethical monitoring systems</li>
+                        <li><strong>Temporal Analysis:</strong> Study posture transitions and movement patterns</li>
+                        <li><strong>Robustness Testing:</strong> Evaluate models under various conditions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Collection Methodology</h2>
+                <div class="section-content">
+                    <p><strong>Capture Protocol:</strong></p>
+                    <ul>
+                        <li>Multiple camera viewpoints to capture postures from different angles</li>
+                        <li>Controlled indoor environment with consistent temperature</li>
+                        <li>Multiple subjects performing each posture category</li>
+                        <li>Natural posture variations to increase diversity</li>
+                        <li>Different distances from camera to test scale invariance</li>
+                    </ul>
+                    <p><strong>Quality Control:</strong></p>
+                    <ul>
+                        <li>Manual verification of posture labels</li>
+                        <li>Removal of ambiguous or transitional poses</li>
+                        <li>Balanced representation across all four categories</li>
+                        <li>Multiple examples per subject-posture combination</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Technical Advantages</h2>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>IPHPDT (Thermal)</th>
+                                <th>RGB Video Surveillance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Privacy</td>
+                                <td>✅ Identity preserved</td>
+                                <td>❌ Faces visible</td>
+                            </tr>
+                            <tr>
+                                <td>Low Light</td>
+                                <td>✅ Works in darkness</td>
+                                <td>❌ Requires lighting</td>
+                            </tr>
+                            <tr>
+                                <td>Ethics</td>
+                                <td>✅ GDPR friendly</td>
+                                <td>⚠️ Privacy concerns</td>
+                            </tr>
+                            <tr>
+                                <td>Occlusion</td>
+                                <td>✅ Sees through light clothing</td>
+                                <td>❌ Surface only</td>
+                            </tr>
+                            <tr>
+                                <td>Dataset Size</td>
+                                <td>75,000 images</td>
+                                <td>Varies widely</td>
+                            </tr>
+                            <tr>
+                                <td>Focus</td>
+                                <td>4 distinct postures</td>
+                                <td>General activities</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Recommended Models & Approaches</h2>
+                <div class="section-content">
+                    <p><strong>Suitable Architectures:</strong></p>
+                    <ul>
+                        <li><strong>CNNs:</strong> ResNet, VGG, MobileNet for posture classification</li>
+                        <li><strong>Vision Transformers:</strong> ViT for global posture understanding</li>
+                        <li><strong>Temporal Models:</strong> LSTMs, GRUs for posture sequence analysis</li>
+                        <li><strong>Lightweight Models:</strong> EfficientNet, MobileNet for edge deployment</li>
+                    </ul>
+                    <p><strong>Training Strategies:</strong></p>
+                    <ul>
+                        <li>Transfer learning from RGB posture datasets</li>
+                        <li>Data augmentation (rotation, scaling, thermal noise)</li>
+                        <li>Multi-view fusion for improved accuracy</li>
+                        <li>Temporal consistency constraints for video sequences</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Benchmark Performance</h2>
+                <div class="section-content">
+                    <p>
+                        According to the paper, various deep learning models have been tested on IPHPDT with 
+                        strong classification performance:
+                    </p>
+                    <ul>
+                        <li>High accuracy across all four posture categories</li>
+                        <li>Robust performance across different subjects</li>
+                        <li>Good generalization to unseen viewpoints</li>
+                        <li>Real-time inference capability demonstrated</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Real-World Deployment:</strong> The large scale and diversity of IPHPDT makes it 
+                            suitable for training production-ready systems. Models trained on this dataset have shown 
+                            successful deployment in actual healthcare monitoring scenarios.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Citation</h2>
+                <div class="section-content">
+                    <p><strong>Publication:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://www.mdpi.com/1424-8220/23/1/92" target="_blank">MDPI Sensors Journal Paper (2023)</a></li>
+                    </ul>
+                    <p><strong>Dataset Access:</strong></p>
+                    <p>
+                        The dataset is described in detail in the MDPI Sensors paper. For access to the actual dataset files, 
+                        researchers should contact the authors directly through the paper or check for supplementary data 
+                        availability on the journal website.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Citation:</strong> When using this dataset, please cite the MDPI Sensors 2023 paper: 
+                            "Identity-Preserved Human Posture Detection in Infrared Thermal Images" and acknowledge the 
+                            authors' contribution to privacy-preserving activity recognition research.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Limitations & Considerations</h2>
+                <div class="section-content">
+                    <p><strong>Dataset Limitations:</strong></p>
+                    <ul>
+                        <li><strong>Indoor Only:</strong> Captured in controlled indoor environments</li>
+                        <li><strong>Limited Postures:</strong> Four categories may not cover all real-world postures</li>
+                        <li><strong>Transitional Poses:</strong> May lack images of posture transitions</li>
+                        <li><strong>Access Restrictions:</strong> May require author contact for full dataset</li>
+                        <li><strong>Single Activity:</strong> Each image shows single posture, not complex activities</li>
+                    </ul>
+                    <p><strong>Practical Considerations:</strong></p>
+                    <ul>
+                        <li>Models may need adaptation for outdoor or varying temperature environments</li>
+                        <li>Multiple postures in single frame not explicitly covered</li>
+                        <li>Clothing thickness may affect thermal signatures</li>
+                        <li>Camera placement and angle critical for deployment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Future Research Directions</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Expand Posture Classes:</strong> Add more complex activities and transitions</li>
+                        <li><strong>Multi-Person Scenarios:</strong> Include multiple people in single frame</li>
+                        <li><strong>Temporal Extensions:</strong> Add video sequences for action recognition</li>
+                        <li><strong>Environmental Diversity:</strong> Capture in various indoor and outdoor settings</li>
+                        <li><strong>Edge Deployment:</strong> Optimize models for embedded thermal cameras</li>
+                        <li><strong>Multi-Modal Fusion:</strong> Combine with other privacy-preserving sensors</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="pop-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-surveillance">Surveillance - UAV Thermal</span>
+                <h1 class="detail-title">POP Thermal Dataset</h1>
+                <p class="detail-subtitle">Partially Occluded Person Detection from UAV Infrared Imaging</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Published</div>
+                        <div class="meta-value">Nature Scientific Data, 2025</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Images</div>
+                        <div class="meta-value">8,768</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Platform</div>
+                        <div class="meta-value">UAV/Drone</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Environment</div>
+                        <div class="meta-value">Outdoor</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        The POP (Partially Occluded Person) Thermal Dataset is a specialized UAV-based infrared thermal 
+                        imaging dataset designed for detecting people in outdoor environments where partial occlusions 
+                        are common. Captured from aerial platforms, this dataset addresses the unique challenges of 
+                        person detection from drone perspectives in scenarios where individuals may be partially hidden 
+                        by vegetation, structures, or terrain features.
+                    </p>
+                    <p>
+                        Published in Nature Scientific Data (2025), this dataset fills a critical gap in UAV-based 
+                        person detection research. Unlike ground-level surveillance, aerial thermal imaging from drones 
+                        presents unique challenges including varying altitudes, bird's-eye view perspectives, and 
+                        environmental occlusions that are distinctly different from traditional surveillance scenarios.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Critical Application:</strong> This dataset is particularly valuable for search and 
+                            rescue operations, disaster response, security surveillance, and wildlife monitoring where 
+                            thermal drones must detect people who are partially obscured by natural or artificial obstacles.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Specifications</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">Total Images</div>
+                        <div class="param-value">8,768</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Labeled Instances</div>
+                        <div class="param-value">Thousands</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Platform</div>
+                        <div class="param-value">UAV-mounted</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Imaging Type</div>
+                        <div class="param-value">Infrared Thermal</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Occlusion Focus</div>
+                        <div class="param-value">Partial</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Environment</div>
+                        <div class="param-value">Outdoor</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Altitude</div>
+                        <div class="param-value">Variable</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Year</div>
+                        <div class="param-value">2025</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Unique Challenges Addressed</h2>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">Partial Occlusions</div>
+                        <div class="protocol-desc">
+                            People partially hidden by trees, bushes, buildings, vehicles, and terrain features. 
+                            Requires algorithms that can detect partial thermal signatures and infer full body presence.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Aerial Perspective</div>
+                        <div class="protocol-desc">
+                            Top-down and oblique viewing angles from UAVs create different thermal signatures compared 
+                            to ground-level cameras. Body shapes and heat distribution appear different from above.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Variable Altitude</div>
+                        <div class="protocol-desc">
+                            Images captured at different flight altitudes result in varying person sizes and 
+                            thermal detail levels, testing scale invariance of detection models.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">Environmental Clutter</div>
+                        <div class="protocol-desc">
+                            Outdoor environments with hot surfaces (sun-warmed rocks, vehicles, buildings) create 
+                            thermal noise that can confuse person detection algorithms.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Key Applications</h2>
+                <div class="section-content">
+                    <p><strong>Search & Rescue Operations:</strong></p>
+                    <ul>
+                        <li><strong>Missing Person Location:</strong> Detect people lost in wilderness or disaster areas</li>
+                        <li><strong>Disaster Response:</strong> Find survivors in collapsed buildings or debris</li>
+                        <li><strong>Night Operations:</strong> Thermal imaging enables 24/7 search capabilities</li>
+                        <li><strong>Large Area Coverage:</strong> UAVs can rapidly scan extensive search zones</li>
+                    </ul>
+                    <p><strong>Security & Surveillance:</strong></p>
+                    <ul>
+                        <li><strong>Border Patrol:</strong> Detect unauthorized crossings in remote areas</li>
+                        <li><strong>Perimeter Security:</strong> Monitor large facilities or restricted zones</li>
+                        <li><strong>Event Surveillance:</strong> Aerial monitoring of crowds and gatherings</li>
+                        <li><strong>Critical Infrastructure:</strong> Protect power plants, pipelines, military bases</li>
+                    </ul>
+                    <p><strong>Research & Development:</strong></p>
+                    <ul>
+                        <li><strong>Occlusion-Robust Detection:</strong> Train models to handle partial visibility</li>
+                        <li><strong>Multi-Scale Detection:</strong> Handle persons at various distances from camera</li>
+                        <li><strong>UAV Vision Systems:</strong> Develop autonomous drone surveillance</li>
+                        <li><strong>Thermal Image Processing:</strong> Advance aerial thermal analysis techniques</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Characteristics</h2>
+                <div class="section-content">
+                    <p><strong>Occlusion Types Covered:</strong></p>
+                    <ul>
+                        <li><strong>Vegetation:</strong> Trees, bushes, tall grass obscuring parts of people</li>
+                        <li><strong>Structures:</strong> Buildings, walls, vehicles blocking thermal signatures</li>
+                        <li><strong>Terrain:</strong> Hills, rocks, uneven ground causing partial visibility</li>
+                        <li><strong>Environmental:</strong> Shadows, mixed thermal backgrounds</li>
+                    </ul>
+                    <p><strong>Capture Conditions:</strong></p>
+                    <ul>
+                        <li>Various times of day (different ambient temperatures)</li>
+                        <li>Different weather conditions</li>
+                        <li>Multiple UAV flight patterns and altitudes</li>
+                        <li>Diverse outdoor environments (urban, rural, natural)</li>
+                        <li>Various levels of occlusion severity</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Annotation & Labels</h2>
+                <div class="section-content">
+                    <p>
+                        The dataset includes detailed annotations for training and evaluating person detection models:
+                    </p>
+                    <ul>
+                        <li><strong>Bounding Boxes:</strong> Coordinates for each detected person (even partially occluded)</li>
+                        <li><strong>Occlusion Labels:</strong> Indicators of occlusion severity and type</li>
+                        <li><strong>Person Count:</strong> Number of people in each frame</li>
+                        <li><strong>Visibility Percentage:</strong> Estimated percentage of body visible</li>
+                        <li><strong>Quality Flags:</strong> Image quality and detection difficulty ratings</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Annotation Challenge:</strong> Annotating partially occluded people from aerial 
+                            thermal imagery requires expert knowledge to distinguish between thermal signatures of 
+                            people vs. environmental heat sources, making this dataset particularly valuable for 
+                            training robust detection systems.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Technical Specifications</h2>
+                <div class="section-content">
+                    <p><strong>UAV & Camera Setup:</strong></p>
+                    <ul>
+                        <li>Thermal infrared camera mounted on commercial or research drones</li>
+                        <li>Long-wave infrared (LWIR) spectrum detection</li>
+                        <li>High-resolution thermal sensors for detailed heat signatures</li>
+                        <li>Stabilized gimbal mounting for image stability</li>
+                        <li>GPS-tagged images for location tracking</li>
+                    </ul>
+                    <p><strong>Image Properties:</strong></p>
+                    <ul>
+                        <li>Thermal infrared spectrum (7-14 μm typical)</li>
+                        <li>Variable resolution depending on altitude</li>
+                        <li>16-bit thermal data or processed 8-bit images</li>
+                        <li>Metadata including altitude, GPS, timestamp</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Comparison with Ground-Based Thermal Datasets</h2>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>POP (UAV)</th>
+                                <th>Ground-Based</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Perspective</td>
+                                <td>Aerial, top-down</td>
+                                <td>Eye-level, frontal</td>
+                            </tr>
+                            <tr>
+                                <td>Occlusion Type</td>
+                                <td>Vegetation, terrain from above</td>
+                                <td>Objects, people</td>
+                            </tr>
+                            <tr>
+                                <td>Scale Variation</td>
+                                <td>Large (altitude changes)</td>
+                                <td>Moderate (distance)</td>
+                            </tr>
+                            <tr>
+                                <td>Coverage Area</td>
+                                <td>Wide field scanning</td>
+                                <td>Fixed or limited pan</td>
+                            </tr>
+                            <tr>
+                                <td>Environment</td>
+                                <td>Primarily outdoor</td>
+                                <td>Indoor & outdoor</td>
+                            </tr>
+                            <tr>
+                                <td>Use Case</td>
+                                <td>Search & rescue, surveillance</td>
+                                <td>Security, monitoring</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Recommended Approaches</h2>
+                <div class="section-content">
+                    <p><strong>Detection Architectures:</strong></p>
+                    <ul>
+                        <li><strong>YOLO Family:</strong> Real-time detection for onboard UAV processing</li>
+                        <li><strong>Faster R-CNN:</strong> High accuracy for post-processing analysis</li>
+                        <li><strong>Feature Pyramid Networks:</strong> Multi-scale detection for varying altitudes</li>
+                        <li><strong>Attention Mechanisms:</strong> Focus on partially visible thermal signatures</li>
+                    </ul>
+                    <p><strong>Training Strategies:</strong></p>
+                    <ul>
+                        <li>Data augmentation: rotation, scaling, thermal noise injection</li>
+                        <li>Transfer learning from ground-based thermal person detection</li>
+                        <li>Hard negative mining for thermal false positives (hot surfaces)</li>
+                        <li>Occlusion-aware loss functions</li>
+                        <li>Multi-task learning (detection + occlusion estimation)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Citation</h2>
+                <div class="section-content">
+                    <p><strong>Publication:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://www.nature.com/articles/s41597-025-04600-0" target="_blank">Nature Scientific Data Paper (2025)</a></li>
+                    </ul>
+                    <p><strong>Dataset Access:</strong></p>
+                    <p>
+                        The dataset access information is provided in the Nature Scientific Data publication. 
+                        Researchers should refer to the paper for download links, usage agreements, and any 
+                        restrictions on dataset use.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Citation:</strong> When using the POP Thermal Dataset, please cite the Nature 
+                            Scientific Data 2025 paper. Proper citation helps acknowledge the significant effort in 
+                            collecting and annotating UAV thermal imagery for partially occluded person detection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Advantages & Limitations</h2>
+                <div class="section-content">
+                    <p><strong>Key Advantages:</strong></p>
+                    <ul>
+                        <li><strong>Unique Perspective:</strong> Aerial UAV viewpoint rarely available in other datasets</li>
+                        <li><strong>Occlusion Focus:</strong> Specifically designed for partial visibility scenarios</li>
+                        <li><strong>Real-World Relevance:</strong> Directly applicable to search & rescue operations</li>
+                        <li><strong>Scale Diversity:</strong> Various altitudes provide multi-scale training data</li>
+                        <li><strong>Outdoor Emphasis:</strong> Covers challenging outdoor thermal environments</li>
+                        <li><strong>Recent Publication:</strong> Reflects current UAV and thermal camera technology</li>
+                    </ul>
+                    <p><strong>Limitations to Consider:</strong></p>
+                    <ul>
+                        <li><strong>Specialized Scenario:</strong> May not generalize to all person detection tasks</li>
+                        <li><strong>Outdoor Only:</strong> Limited to outdoor environments</li>
+                        <li><strong>UAV-Specific:</strong> Results may not transfer to ground-based or other platforms</li>
+                        <li><strong>Annotation Complexity:</strong> Partial occlusions challenging to annotate consistently</li>
+                        <li><strong>Environmental Dependency:</strong> Performance may vary with weather and terrain</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Future Research Directions</h2>
+                <div class="section-content">
+                    <ul>
+                        <li><strong>Temporal Sequences:</strong> Extend to video for tracking occluded people</li>
+                        <li><strong>Multi-Spectral Fusion:</strong> Combine thermal with RGB for improved detection</li>
+                        <li><strong>Autonomous Navigation:</strong> Use for UAV path planning around obstacles</li>
+                        <li><strong>Activity Recognition:</strong> Classify actions of partially visible people</li>
+                        <li><strong>3D Reconstruction:</strong> Estimate 3D positions from multiple UAV viewpoints</li>
+                        <li><strong>Edge Processing:</strong> Optimize models for onboard UAV computation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="kaggle-detail" class="detail-view">
+            <button class="back-button" onclick="showDashboard()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Datasets
+            </button>
+            
+            <div class="detail-header">
+                <span class="category-badge badge-surveillance">General Detection - Easy Access</span>
+                <h1 class="detail-title">Thermal Images for Human Detection</h1>
+                <p class="detail-subtitle">Kaggle YOLO-Format General Purpose Detection Dataset</p>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Platform</div>
+                        <div class="meta-value">Kaggle</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Format</div>
+                        <div class="meta-value">YOLO</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Access</div>
+                        <div class="meta-value">Public & Free</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Task</div>
+                        <div class="meta-value">Object Detection</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Overview</h2>
+                <div class="section-content">
+                    <p>
+                        This Kaggle-hosted thermal imaging dataset provides a straightforward, accessible resource for 
+                        training and testing thermal human detection models. Pre-formatted with YOLO-style bounding box 
+                        annotations, it's designed for researchers and developers who want to quickly prototype thermal 
+                        person detection systems without extensive preprocessing.
+                    </p>
+                    <p>
+                        The dataset serves as an excellent starting point for learning thermal image processing and 
+                        object detection, offering immediate compatibility with popular detection frameworks like 
+                        YOLOv5, YOLOv8, YOLOv11, and other YOLO variants. The community-driven nature of Kaggle also 
+                        means active discussions, shared notebooks, and collaborative improvements.
+                    </p>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Perfect For Beginners:</strong> This dataset is ideal for getting started with 
+                            thermal image detection. The YOLO format, comprehensive documentation, and active Kaggle 
+                            community make it accessible for both learning and rapid prototyping.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Dataset Characteristics</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <div class="param-label">Annotation Format</div>
+                        <div class="param-value">YOLO</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Access Method</div>
+                        <div class="param-value">Kaggle API</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">License</div>
+                        <div class="param-value">Open</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Target Class</div>
+                        <div class="param-value">Human/Person</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Setup Time</div>
+                        <div class="param-value">< 5 minutes</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Community</div>
+                        <div class="param-value">Active</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Notebooks</div>
+                        <div class="param-value">Available</div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-label">Framework</div>
+                        <div class="param-value">Any YOLO</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">YOLO Annotation Format</h2>
+                <div class="section-content">
+                    <p>
+                        The dataset uses the standard YOLO annotation format, making it plug-and-play with YOLO 
+                        detection frameworks:
+                    </p>
+                    <p><strong>Format Structure:</strong></p>
+                    <ul>
+                        <li><strong>One text file per image:</strong> Each .txt file corresponds to an image</li>
+                        <li><strong>Format:</strong> class_id x_center y_center width height (all normalized 0-1)</li>
+                        <li><strong>Multiple objects:</strong> One line per object/person in the image</li>
+                        <li><strong>Normalized coordinates:</strong> Values relative to image dimensions</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Example Annotation:</strong><br>
+                            <code>0 0.512 0.623 0.145 0.287</code><br>
+                            This means: Class 0 (person), centered at (51.2%, 62.3%), with width 14.5% and height 28.7% of image dimensions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Quick Start Guide</h2>
+                <div class="protocols-grid">
+                    <div class="protocol-card">
+                        <div class="protocol-title">1. Download</div>
+                        <div class="protocol-desc">
+                            Use Kaggle API or web interface to download the dataset. Single command: 
+                            <code>kaggle datasets download -d sikdermdsaiful/thermal-images-for-human-detection</code>
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">2. Setup Structure</div>
+                        <div class="protocol-desc">
+                            Organize into train/val/test folders with images/ and labels/ subdirectories. 
+                            Already structured if downloaded properly.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">3. Create YAML</div>
+                        <div class="protocol-desc">
+                            Simple YAML configuration file specifying paths and classes. Example provided 
+                            in Kaggle notebooks and documentation.
+                        </div>
+                    </div>
+                    <div class="protocol-card">
+                        <div class="protocol-title">4. Train Model</div>
+                        <div class="protocol-desc">
+                            Use any YOLO framework (v5/v8/v11). Single line training: 
+                            <code>yolo train model=yolov8n.pt data=thermal.yaml epochs=100</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Advantages for Development</h2>
+                <div class="section-content">
+                    <p><strong>Ease of Use:</strong></p>
+                    <ul>
+                        <li><strong>No Preprocessing:</strong> Annotations ready to use immediately</li>
+                        <li><strong>Standard Format:</strong> Compatible with all major YOLO implementations</li>
+                        <li><strong>Fast Download:</strong> Kaggle's infrastructure ensures quick access</li>
+                        <li><strong>Free Hosting:</strong> No storage costs or access fees</li>
+                        <li><strong>API Integration:</strong> Programmatic download in automated pipelines</li>
+                    </ul>
+                    <p><strong>Community Support:</strong></p>
+                    <ul>
+                        <li><strong>Active Discussions:</strong> Forum for questions and solutions</li>
+                        <li><strong>Shared Notebooks:</strong> Pre-built training examples and experiments</li>
+                        <li><strong>Version Control:</strong> Dataset updates tracked and documented</li>
+                        <li><strong>Reproducibility:</strong> Fixed versions ensure consistent experiments</li>
+                    </ul>
+                    <p><strong>Rapid Prototyping:</strong></p>
+                    <ul>
+                        <li><strong>Quick Iteration:</strong> Test ideas without annotation overhead</li>
+                        <li><strong>Baseline Models:</strong> Establish performance benchmarks quickly</li>
+                        <li><strong>Transfer Learning:</strong> Pre-train on this before fine-tuning on custom data</li>
+                        <li><strong>Algorithm Testing:</strong> Compare detection approaches efficiently</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Compatible Frameworks</h2>
+                <div class="section-content">
+                    <p>
+                        The YOLO format makes this dataset compatible with numerous detection frameworks:
+                    </p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Framework</th>
+                                <th>Version</th>
+                                <th>Compatibility</th>
+                                <th>Speed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>YOLOv5</td>
+                                <td>v7.0</td>
+                                <td>✅ Direct</td>
+                                <td>Fast</td>
+                            </tr>
+                            <tr>
+                                <td>YOLOv8</td>
+                                <td>Latest</td>
+                                <td>✅ Direct</td>
+                                <td>Very Fast</td>
+                            </tr>
+                            <tr>
+                                <td>YOLOv11</td>
+                                <td>Latest</td>
+                                <td>✅ Direct</td>
+                                <td>Ultra Fast</td>
+                            </tr>
+                            <tr>
+                                <td>Darknet</td>
+                                <td>v4</td>
+                                <td>✅ Direct</td>
+                                <td>Fast</td>
+                            </tr>
+                            <tr>
+                                <td>Other Detectors</td>
+                                <td>Various</td>
+                                <td>⚠️ Convert</td>
+                                <td>Varies</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Use Cases & Applications</h2>
+                <div class="section-content">
+                    <p><strong>Educational:</strong></p>
+                    <ul>
+                        <li>Learn thermal image processing and analysis</li>
+                        <li>Understand YOLO detection architecture</li>
+                        <li>Practice data preprocessing and augmentation</li>
+                        <li>Experiment with hyperparameter tuning</li>
+                    </ul>
+                    <p><strong>Research:</strong></p>
+                    <ul>
+                        <li>Baseline for comparing new detection algorithms</li>
+                        <li>Pre-training before transfer learning</li>
+                        <li>Testing domain adaptation techniques</li>
+                        <li>Benchmarking inference speed optimizations</li>
+                    </ul>
+                    <p><strong>Development:</strong></p>
+                    <ul>
+                        <li>Prototype thermal surveillance systems</li>
+                        <li>Develop edge device detection applications</li>
+                        <li>Create proof-of-concept demonstrations</li>
+                        <li>Test deployment pipelines</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Kaggle Integration</h2>
+                <div class="section-content">
+                    <p><strong>Access Methods:</strong></p>
+                    <ul>
+                        <li><strong>Web Download:</strong> Click download button on Kaggle dataset page</li>
+                        <li><strong>Kaggle API:</strong> Command-line download for automation</li>
+                        <li><strong>Kaggle Notebooks:</strong> Direct access in cloud environment</li>
+                        <li><strong>Version Control:</strong> Pin specific versions for reproducibility</li>
+                    </ul>
+                    <p><strong>Kaggle Notebooks Features:</strong></p>
+                    <ul>
+                        <li>Free GPU/TPU for training (limited hours per week)</li>
+                        <li>Pre-installed ML libraries and frameworks</li>
+                        <li>Easy sharing and collaboration</li>
+                        <li>Integrated with dataset (no download needed)</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Pro Tip:</strong> Use Kaggle Notebooks for initial experimentation with free GPU 
+                            access. The dataset is pre-loaded, so you can start training immediately without local 
+                            downloads or setup.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Example Training Code</h2>
+                <div class="section-content">
+                    <p><strong>YOLOv8 Training (Ultralytics):</strong></p>
+                    <div class="highlight-box">
+                        <p>
+                            <code>
+                            # Install<br>
+                            pip install ultralytics<br>
+                            <br>
+                            # Download dataset<br>
+                            kaggle datasets download -d sikdermdsaiful/thermal-images-for-human-detection<br>
+                            <br>
+                            # Create data.yaml<br>
+                            # path: ./thermal_dataset<br>
+                            # train: images/train<br>
+                            # val: images/val<br>
+                            # names: {0: 'person'}<br>
+                            <br>
+                            # Train<br>
+                            from ultralytics import YOLO<br>
+                            model = YOLO('yolov8n.pt')<br>
+                            results = model.train(data='data.yaml', epochs=100, imgsz=640)
+                            </code>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Access & Resources</h2>
+                <div class="section-content">
+                    <p><strong>Dataset Access:</strong></p>
+                    <ul class="link-list">
+                        <li><a href="https://www.kaggle.com/datasets/sikdermdsaiful/thermal-images-for-human-detection" target="_blank">Kaggle Dataset Page</a></li>
+                    </ul>
+                    <p><strong>Additional Resources:</strong></p>
+                    <ul>
+                        <li>Community notebooks with training examples</li>
+                        <li>Discussion forum for Q&A</li>
+                        <li>Dataset metadata and descriptions</li>
+                        <li>Version history and updates</li>
+                    </ul>
+                    <p><strong>Getting Started:</strong></p>
+                    <ul>
+                        <li>Create free Kaggle account</li>
+                        <li>Accept dataset terms</li>
+                        <li>Download or use in Kaggle Notebook</li>
+                        <li>Start training immediately</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Best Practices</h2>
+                <div class="section-content">
+                    <p><strong>For Training:</strong></p>
+                    <ul>
+                        <li><strong>Data Augmentation:</strong> Add rotation, flip, brightness adjustments</li>
+                        <li><strong>Validation Split:</strong> Ensure proper train/val separation</li>
+                        <li><strong>Hyperparameter Tuning:</strong> Experiment with learning rate, batch size</li>
+                        <li><strong>Early Stopping:</strong> Monitor validation metrics to prevent overfitting</li>
+                    </ul>
+                    <p><strong>For Deployment:</strong></p>
+                    <ul>
+                        <li><strong>Model Optimization:</strong> Quantization, pruning for edge devices</li>
+                        <li><strong>Inference Testing:</strong> Benchmark on target hardware</li>
+                        <li><strong>Error Analysis:</strong> Study false positives/negatives</li>
+                        <li><strong>Domain Adaptation:</strong> Fine-tune on your specific thermal camera</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Limitations & Considerations</h2>
+                <div class="section-content">
+                    <p><strong>Dataset Limitations:</strong></p>
+                    <ul>
+                        <li><strong>General Purpose:</strong> May not cover specialized scenarios</li>
+                        <li><strong>Unknown Origin:</strong> Limited metadata about capture conditions</li>
+                        <li><strong>Camera Specs:</strong> Source camera types may not be documented</li>
+                        <li><strong>Annotation Quality:</strong> Community-contributed, may have inconsistencies</li>
+                    </ul>
+                    <p><strong>Recommended Use:</strong></p>
+                    <ul>
+                        <li>Learning and educational purposes</li>
+                        <li>Initial prototyping and algorithm testing</li>
+                        <li>Transfer learning baseline before custom data</li>
+                        <li>Quick feasibility studies</li>
+                    </ul>
+                    <p><strong>Not Recommended For:</strong></p>
+                    <ul>
+                        <li>Production systems without validation on target domain</li>
+                        <li>Safety-critical applications (medical, autonomous vehicles)</li>
+                        <li>Scenarios requiring specific thermal camera calibration</li>
+                        <li>Applications needing detailed metadata</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Complementary Datasets</h2>
+                <div class="section-content">
+                    <p>
+                        For more comprehensive thermal person detection research, consider combining this dataset with:
+                    </p>
+                    <ul>
+                        <li><strong>OpenThermalPose:</strong> Add pose estimation capabilities</li>
+                        <li><strong>IPHPDT:</strong> Expand with posture classification</li>
+                        <li><strong>POP Thermal:</strong> Add aerial/UAV perspectives</li>
+                        <li><strong>Custom Collections:</strong> Capture your own data for specific use cases</li>
+                    </ul>
+                    <p>
+                        Combining datasets helps create more robust models that generalize better across different 
+                        thermal cameras, environments, and scenarios.
+                    </p>
+                </div>
+            </div>
+        </div>
+    
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            const icon = document.getElementById('theme-icon');
+            if (newTheme === 'dark') {
+                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+            } else {
+                icon.innerHTML = '<path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>';
+            }
+        }
+
+        // Filter toggle
+        function toggleFilters() {
+            const filterBar = document.getElementById('filter-bar');
+            const filterToggle = document.querySelector('.filter-toggle');
+            
+            if (filterBar.style.display === 'none' || filterBar.style.display === '') {
+                filterBar.style.display = 'block';
+                filterToggle.classList.add('active');
+            } else {
+                filterBar.style.display = 'none';
+                filterToggle.classList.remove('active');
+            }
+        }
+
+        // Filter datasets
+        let currentFilter = 'all';
+        function filterDatasets(category) {
+            currentFilter = category;
+            const cards = document.querySelectorAll('.dataset-card');
+            const chips = document.querySelectorAll('.filter-chip');
+            
+            // Update active chip
+            chips.forEach(chip => {
+                if (chip.dataset.filter === category) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+            
+            // Filter cards
+            cards.forEach(card => {
+                const cardCategory = card.dataset.category;
+                if (category === 'all' || cardCategory === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Navigation
+        function showDetail(dataset) {
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById(dataset + '-detail').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        
+        function showDashboard() {
+            document.querySelectorAll('.detail-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById('dashboard-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,285 @@
+{
+  "id": "pop",
+  "title": "POP Thermal",
+  "subtitle": "Partially Occluded Person Detection",
+  "category": "surveillance",
+  "card": {
+    "description": "UAV-based infrared thermal imaging dataset for outdoor partially occluded person detection.\nDesigned for aerial surveillance and search-and-rescue applications.\n",
+    "stats": [
+      {
+        "label": "Images",
+        "value": "8,768"
+      },
+      {
+        "label": "Platform",
+        "value": "UAV"
+      },
+      {
+        "label": "Type",
+        "value": "Outdoor"
+      }
+    ],
+    "tags": [
+      "UAV",
+      "Occlusion Detection",
+      "Outdoor",
+      "Surveillance"
+    ],
+    "links": {
+      "primary": {
+        "text": "View Paper",
+        "url": "https://www.nature.com/articles/s41597-025-04600-0"
+      },
+      "secondary": {
+        "text": "View Details",
+        "action": "show-detail"
+      }
+    }
+  },
+  "detail": {
+    "header": {
+      "badges": [
+        {
+          "type": "surveillance",
+          "text": "Surveillance - UAV Thermal"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Published",
+          "value": "Nature Scientific Data, 2025"
+        },
+        {
+          "label": "Images",
+          "value": "8,768"
+        },
+        {
+          "label": "Platform",
+          "value": "UAV/Drone"
+        },
+        {
+          "label": "Environment",
+          "value": "Outdoor"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "type": "overview",
+        "title": "Overview",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "The POP (Partially Occluded Person) Thermal Dataset is a specialized UAV-based infrared thermal\nimaging dataset designed for detecting people in outdoor environments where partial occlusions\nare common. Captured from aerial platforms, this dataset addresses the unique challenges of\nperson detection from drone perspectives in scenarios where individuals may be partially hidden\nby vegetation, structures, or terrain features.\n"
+          },
+          {
+            "type": "paragraph",
+            "text": "Published in Nature Scientific Data (2025), this dataset fills a critical gap in UAV-based\nperson detection research. Unlike ground-level surveillance, aerial thermal imaging from drones\npresents unique challenges including varying altitudes, bird's-eye view perspectives, and\nenvironmental occlusions that are distinctly different from traditional surveillance scenarios.\n"
+          },
+          {
+            "type": "highlight",
+            "text": "**Critical Application:** This dataset is particularly valuable for search and\nrescue operations, disaster response, security surveillance, and wildlife monitoring where\nthermal drones must detect people who are partially obscured by natural or artificial obstacles.\n"
+          }
+        ]
+      },
+      {
+        "type": "specifications",
+        "title": "Dataset Specifications",
+        "params": [
+          {
+            "label": "Total Images",
+            "value": "8,768"
+          },
+          {
+            "label": "Labeled Instances",
+            "value": "Thousands"
+          },
+          {
+            "label": "Platform",
+            "value": "UAV-mounted"
+          },
+          {
+            "label": "Imaging Type",
+            "value": "Infrared Thermal"
+          },
+          {
+            "label": "Occlusion Focus",
+            "value": "Partial"
+          },
+          {
+            "label": "Environment",
+            "value": "Outdoor"
+          },
+          {
+            "label": "Altitude",
+            "value": "Variable"
+          },
+          {
+            "label": "Year",
+            "value": "2025"
+          }
+        ]
+      },
+      {
+        "type": "protocols",
+        "title": "Unique Challenges Addressed",
+        "protocols": [
+          {
+            "title": "Partial Occlusions",
+            "description": "People partially hidden by trees, bushes, buildings, vehicles, and terrain features.\nRequires algorithms that can detect partial thermal signatures and infer full body presence.\n"
+          },
+          {
+            "title": "Aerial Perspective",
+            "description": "Top-down and oblique viewing angles from UAVs create different thermal signatures compared\nto ground-level cameras. Body shapes and heat distribution appear different from above.\n"
+          },
+          {
+            "title": "Variable Altitude",
+            "description": "Images captured at different flight altitudes result in varying person sizes and\nthermal detail levels, testing scale invariance of detection models.\n"
+          },
+          {
+            "title": "Environmental Clutter",
+            "description": "Outdoor environments with hot surfaces (sun-warmed rocks, vehicles, buildings) create\nthermal noise that can confuse person detection algorithms.\n"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Key Applications",
+        "description": "**Search & Rescue Operations:**\n\n**Security & Surveillance:**\n\n**Research & Development:**\n",
+        "items": [
+          "**Missing Person Location:** Detect people lost in wilderness or disaster areas",
+          "**Disaster Response:** Find survivors in collapsed buildings or debris",
+          "**Night Operations:** Thermal imaging enables 24/7 search capabilities",
+          "**Large Area Coverage:** UAVs can rapidly scan extensive search zones",
+          "**Border Patrol:** Detect unauthorized crossings in remote areas",
+          "**Perimeter Security:** Monitor large facilities or restricted zones",
+          "**Event Surveillance:** Aerial monitoring of crowds and gatherings",
+          "**Critical Infrastructure:** Protect power plants, pipelines, military bases",
+          "**Occlusion-Robust Detection:** Train models to handle partial visibility",
+          "**Multi-Scale Detection:** Handle persons at various distances from camera",
+          "**UAV Vision Systems:** Develop autonomous drone surveillance"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Dataset Characteristics",
+        "description": "**Occlusion Types Covered:**\n\n**Capture Conditions:**\n",
+        "items": [
+          "**Vegetation:** Trees, bushes, tall grass obscuring parts of people",
+          "**Structures:** Buildings, walls, vehicles blocking thermal signatures",
+          "**Terrain:** Hills, rocks, uneven ground causing partial visibility",
+          "**Environmental:** Shadows, mixed thermal backgrounds",
+          "Various times of day (different ambient temperatures)",
+          "Different weather conditions",
+          "Multiple UAV flight patterns and altitudes",
+          "Diverse outdoor environments (urban, rural, natural)",
+          "Various levels of occlusion severity"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Annotation & Labels",
+        "description": "The dataset includes detailed annotations for training and evaluating person detection models:",
+        "items": [
+          "**Bounding Boxes:** Coordinates for each detected person (even partially occluded)",
+          "**Occlusion Labels:** Indicators of occlusion severity and type",
+          "**Person Count:** Number of people in each frame",
+          "**Visibility Percentage:** Estimated percentage of body visible",
+          "**Quality Flags:** Image quality and detection difficulty ratings"
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Comparison with Ground-Based Thermal Datasets",
+        "table": {
+          "headers": [
+            "Feature",
+            "POP (UAV)",
+            "Ground-Based"
+          ],
+          "rows": [
+            [
+              "Perspective",
+              "Aerial, top-down",
+              "Eye-level, frontal"
+            ],
+            [
+              "Occlusion Type",
+              "Vegetation, terrain from above",
+              "Objects, people"
+            ],
+            [
+              "Scale Variation",
+              "Large (altitude changes)",
+              "Moderate (distance)"
+            ],
+            [
+              "Coverage Area",
+              "Wide field scanning",
+              "Fixed or limited pan"
+            ],
+            [
+              "Environment",
+              "Primarily outdoor",
+              "Indoor & outdoor"
+            ],
+            [
+              "Use Case",
+              "Search & rescue, surveillance",
+              "Security, monitoring"
+            ]
+          ]
+        }
+      },
+      {
+        "type": "list",
+        "title": "Recommended Approaches",
+        "description": "**Detection Architectures:**\n\n**Training Strategies:**\n",
+        "items": [
+          "**YOLO Family:** Real-time detection for onboard UAV processing",
+          "**Faster R-CNN:** High accuracy for post-processing analysis",
+          "**Feature Pyramid Networks:** Multi-scale detection for varying altitudes",
+          "**Attention Mechanisms:** Focus on partially visible thermal signatures",
+          "Data augmentation: rotation, scaling, thermal noise injection",
+          "Transfer learning from ground-based thermal person detection",
+          "Hard negative mining for thermal false positives (hot surfaces)",
+          "Occlusion-aware loss functions",
+          "Multi-task learning (detection + occlusion estimation)"
+        ]
+      },
+      {
+        "type": "links",
+        "title": "Access & Citation",
+        "description": "**Publication:**\n\n**Dataset Access:**\n\nThe dataset access information is provided in the Nature Scientific Data publication.\nResearchers should refer to the paper for download links, usage agreements, and any\nrestrictions on dataset use.\n",
+        "links": [
+          {
+            "text": "Nature Scientific Data Paper (2025)",
+            "url": "https://www.nature.com/articles/s41597-025-04600-0"
+          }
+        ],
+        "note": {
+          "type": "highlight",
+          "text": "**Citation:** When using the POP Thermal Dataset, please cite the Nature\nScientific Data 2025 paper. Proper citation helps acknowledge the significant effort in\ncollecting and annotating UAV thermal imagery for partially occluded person detection.\n"
+        }
+      },
+      {
+        "type": "list",
+        "title": "Advantages & Limitations",
+        "description": "**Key Advantages:**\n\n**Limitations to Consider:**\n",
+        "items": [
+          "**Unique Perspective:** Aerial UAV viewpoint rarely available in other datasets",
+          "**Occlusion Focus:** Specifically designed for partial visibility scenarios",
+          "**Real-World Relevance:** Directly applicable to search & rescue operations",
+          "**Scale Diversity:** Various altitudes provide multi-scale training data",
+          "**Outdoor Emphasis:** Covers challenging outdoor thermal environments",
+          "**Recent Publication:** Reflects current UAV and thermal camera technology",
+          "**Specialized Scenario:** May not generalize to all person detection tasks",
+          "**Outdoor Only:** Limited to outdoor environments",
+          "**UAV-Specific:** Results may not transfer to ground-based or other platforms",
+          "**Annotation Complexity:** Partial occlusions challenging to annotate consistently",
+          "**Environmental Dependency:** Performance may vary with weather and terrain"
+        ]
+      }
+    ]
+  }
+}
