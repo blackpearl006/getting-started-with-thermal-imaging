@@ -1,8 +1,8 @@
 {
-  "buildDate": "2025-11-18T06:10:49.651Z",
-  "datasetsCount": 9,
-  "cardsFileSize": 8955,
-  "totalFullSize": 82443,
+  "buildDate": "2025-11-18T16:11:06.220Z",
+  "datasetsCount": 10,
+  "cardsFileSize": 10023,
+  "totalFullSize": 90721,
   "performanceGain": "90%",
   "datasets": [
     {
@@ -38,6 +38,11 @@
     {
       "id": "openthermalpose2",
       "title": "OpenThermalPose2",
+      "category": "research"
+    },
+    {
+      "id": "test-dataset",
+      "title": "Test Thermal Dataset",
       "category": "research"
     },
     {

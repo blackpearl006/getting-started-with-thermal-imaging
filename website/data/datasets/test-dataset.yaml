@@ -1,0 +1,198 @@
+# ============================================
+# TEST DATASET - FOR WORKFLOW VALIDATION
+# ============================================
+# This is a dummy dataset created to test the complete workflow
+# of adding new datasets to the Thermal Dataset Discovery website.
+
+id: "test-dataset"
+title: "Test Thermal Dataset"
+subtitle: "Dummy Dataset for Testing Complete Workflow"
+category: "research"
+
+card:
+  description: |
+    This is a test dataset created to validate the complete workflow of adding new thermal imaging datasets to the discovery platform. It demonstrates all section types and features available in the YAML schema.
+  stats:
+    - label: "Images"
+      value: "1,000+"
+    - label: "Subjects"
+      value: "50"
+    - label: "Year"
+      value: "2025"
+  tags:
+    - "Test Dataset"
+    - "Workflow Validation"
+    - "FLIR Camera"
+    - "Indoor/Outdoor"
+  links:
+    primary:
+      text: "Access Dataset"
+      url: "https://example.com/test-dataset"
+    secondary:
+      text: "Documentation"
+      url: "https://example.com/test-dataset/docs"
+
+detail:
+  header:
+    badges:
+      - type: "research"
+        text: "Research - Test Dataset"
+      - type: "public"
+        text: "Public Access"
+    meta:
+      - label: "Institution"
+        value: "Test University"
+      - label: "Year"
+        value: "2025"
+      - label: "License"
+        value: "CC BY 4.0"
+      - label: "Contact"
+        value: "test@example.com"
+
+  sections:
+    # Section 1: Overview
+    - type: "overview"
+      title: "Overview"
+      content:
+        - type: "paragraph"
+          text: "This is a comprehensive test dataset designed to validate the complete workflow of adding new thermal imaging datasets to the Thermal Dataset Discovery platform."
+        - type: "paragraph"
+          text: "The dataset includes **1,000+ thermal images** captured in various conditions to demonstrate the flexibility of the YAML schema and build process."
+        - type: "list"
+          items:
+            - "Indoor environments (temperature controlled)"
+            - "Outdoor environments (various weather conditions)"
+            - "Multiple subjects and scenarios"
+            - "Day and night captures"
+            - "Different camera angles and distances"
+
+    # Section 2: Technical Specifications
+    - type: "specifications"
+      title: "Technical Specifications"
+      content:
+        - label: "Camera Model"
+          value: "FLIR Test-9000"
+        - label: "Resolution"
+          value: "640 × 480 pixels"
+        - label: "Thermal Sensitivity"
+          value: "<0.05°C @ 30°C"
+        - label: "Temperature Range"
+          value: "-20°C to 150°C"
+        - label: "Frame Rate"
+          value: "30 fps"
+        - label: "Spectral Range"
+          value: "7.5 - 13 μm"
+        - label: "Image Format"
+          value: "TIFF (16-bit), JPEG (visual)"
+        - label: "File Size"
+          value: "~2-5 MB per image"
+
+    # Section 3: Acquisition Protocol
+    - type: "protocols"
+      title: "Data Acquisition Protocol"
+      content:
+        steps:
+          - "Subject positioning at standardized distance (2 meters)"
+          - "15-minute acclimatization period in controlled environment"
+          - "Baseline thermal image capture"
+          - "Activity/stimulus introduction"
+          - "Post-activity thermal image capture"
+          - "Data quality verification and annotation"
+        notes:
+          - "All captures performed in temperature-controlled room (22°C ± 1°C)"
+          - "Humidity maintained at 50% ± 5%"
+          - "Multiple operators for data collection validation"
+
+    # Section 4: Dataset Statistics
+    - type: "list"
+      title: "Dataset Statistics"
+      content:
+        items:
+          - "**Total Images:** 1,000+"
+          - "**Subjects:** 50 (25 male, 25 female)"
+          - "**Age Range:** 18-65 years"
+          - "**Indoor Captures:** 600 images"
+          - "**Outdoor Captures:** 400 images"
+          - "**Annotated Images:** 100%"
+          - "**Quality Control:** Triple validation"
+
+    # Section 5: File Structure
+    - type: "table"
+      title: "Dataset File Structure"
+      content:
+        headers:
+          - "Directory"
+          - "Contents"
+          - "File Count"
+          - "Format"
+        rows:
+          - cells:
+              - "`/thermal/`"
+              - "Raw thermal images"
+              - "1,000"
+              - "TIFF (16-bit)"
+          - cells:
+              - "`/visual/`"
+              - "Visual reference images"
+              - "1,000"
+              - "JPEG"
+          - cells:
+              - "`/annotations/`"
+              - "Metadata and labels"
+              - "1,000"
+              - "JSON"
+          - cells:
+              - "`/calibration/`"
+              - "Camera calibration data"
+              - "50"
+              - "CSV"
+
+    # Section 6: Download Links
+    - type: "links"
+      title: "Downloads & Resources"
+      content:
+        - text: "📦 Full Dataset (ZIP, 4.5 GB)"
+          url: "https://example.com/test-dataset/download"
+        - text: "📄 Dataset Paper (PDF)"
+          url: "https://example.com/test-dataset/paper.pdf"
+        - text: "💻 Python Processing Scripts"
+          url: "https://github.com/example/test-dataset-scripts"
+        - text: "📊 Sample Data (100 images, 450 MB)"
+          url: "https://example.com/test-dataset/sample"
+        - text: "📖 API Documentation"
+          url: "https://example.com/test-dataset/api"
+
+    # Section 7: Applications
+    - type: "overview"
+      title: "Potential Applications"
+      content:
+        - type: "paragraph"
+          text: "This test dataset can be used to validate various thermal imaging processing pipelines and research workflows:"
+        - type: "list"
+          items:
+            - "Testing dataset addition workflow"
+            - "Validating build scripts and automation"
+            - "UI/UX testing for new dataset display"
+            - "Search and filter functionality validation"
+            - "Theme compatibility testing"
+
+    # Section 8: Citation
+    - type: "overview"
+      title: "Citation"
+      content:
+        - type: "paragraph"
+          text: "If you use this test dataset for validation purposes, please cite:"
+        - type: "paragraph"
+          text: "```\nTest Dataset Contributors (2025). Test Thermal Dataset: Workflow Validation Dataset. Test University. https://example.com/test-dataset\n```"
+
+    # Section 9: Contact & Support
+    - type: "overview"
+      title: "Contact & Support"
+      content:
+        - type: "paragraph"
+          text: "For questions about this test dataset or the workflow validation process:"
+        - type: "list"
+          items:
+            - "**Email:** test@example.com"
+            - "**GitHub Issues:** [Report Issues](https://github.com/example/test-dataset/issues)"
+            - "**Documentation:** [Wiki](https://github.com/example/test-dataset/wiki)"

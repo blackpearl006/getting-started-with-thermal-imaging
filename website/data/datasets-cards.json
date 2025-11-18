@@ -273,6 +273,45 @@
     }
   },
   {
+    "id": "test-dataset",
+    "title": "Test Thermal Dataset",
+    "subtitle": "Dummy Dataset for Testing Complete Workflow",
+    "category": "research",
+    "card": {
+      "description": "This is a test dataset created to validate the complete workflow of adding new thermal imaging datasets to the discovery platform. It demonstrates all section types and features available in the YAML schema.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "1,000+"
+        },
+        {
+          "label": "Subjects",
+          "value": "50"
+        },
+        {
+          "label": "Year",
+          "value": "2025"
+        }
+      ],
+      "tags": [
+        "Test Dataset",
+        "Workflow Validation",
+        "FLIR Camera",
+        "Indoor/Outdoor"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access Dataset",
+          "url": "https://example.com/test-dataset"
+        },
+        "secondary": {
+          "text": "Documentation",
+          "url": "https://example.com/test-dataset/docs"
+        }
+      }
+    }
+  },
+  {
     "id": "pop",
     "title": "POP Thermal",
     "subtitle": "Partially Occluded Person Detection",
