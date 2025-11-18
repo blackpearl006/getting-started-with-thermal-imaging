@@ -1,0 +1,54 @@
+{
+  "buildDate": "2025-11-18T06:10:49.651Z",
+  "datasetsCount": 9,
+  "cardsFileSize": 8955,
+  "totalFullSize": 82443,
+  "performanceGain": "90%",
+  "datasets": [
+    {
+      "id": "mendeley",
+      "title": "Breast Thermography (Mendeley)",
+      "category": "medical-breast"
+    },
+    {
+      "id": "dmrir",
+      "title": "DMR-IR",
+      "category": "medical-breast"
+    },
+    {
+      "id": "faceoral",
+      "title": "Face-Oral Temperature",
+      "category": "medical-other"
+    },
+    {
+      "id": "iphpdt",
+      "title": "IPHPDT",
+      "category": "research"
+    },
+    {
+      "id": "lwirpose",
+      "title": "LWIRPOSE",
+      "category": "research"
+    },
+    {
+      "id": "openthermalpose",
+      "title": "OpenThermalPose",
+      "category": "research"
+    },
+    {
+      "id": "openthermalpose2",
+      "title": "OpenThermalPose2",
+      "category": "research"
+    },
+    {
+      "id": "pop",
+      "title": "POP Thermal",
+      "category": "surveillance"
+    },
+    {
+      "id": "kaggle-thermal",
+      "title": "Thermal Human Detection",
+      "category": "surveillance"
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thermal Imaging Dataset Discovery</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body data-theme="dark">
+    <div id="app">
+        <!-- Loading state -->
+        <div v-if="loading" class="container">
+            <div style="text-align: center; padding: 100px 0;">
+                <h2>Loading datasets...</h2>
+                <p style="color: var(--text-secondary); margin-top: 12px;">Please wait</p>
+            </div>
+        </div>
+
+        <!-- Error state -->
+        <div v-else-if="error" class="container">
+            <div style="text-align: center; padding: 100px 0;">
+                <h2 style="color: var(--red);">Error Loading Datasets</h2>
+                <p style="color: var(--text-secondary); margin-top: 12px;">{{ error }}</p>
+                <button @click="loadDatasetCards" class="btn btn-primary" style="margin-top: 20px;">Retry</button>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div v-else class="container">
+            <!-- Dashboard View -->
+            <div v-if="currentView === 'dashboard'">
+                <header>
+                    <div class="header-left">
+                        <h1>Thermal Imaging Dataset Discovery</h1>
+                        <p class="subtitle">Curated collection of thermal imaging datasets for research and development</p>
+                    </div>
+                    <div class="header-right">
+                        <button class="filter-toggle" :class="{ active: showFilters }" @click="showFilters = !showFilters" title="Toggle filters">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+                            </svg>
+                        </button>
+                        <button class="theme-toggle" @click="toggleTheme" title="Toggle theme">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Search and Sort Bar -->
+                <div class="search-sort-bar">
+                    <div class="search-container">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input
+                            ref="searchInput"
+                            v-model="searchQuery"
+                            type="text"
+                            class="search-input"
+                            placeholder="Search datasets... (Ctrl+K)"
+                            @input="showFilters = true">
+                        <button
+                            v-if="searchQuery"
+                            @click="clearSearch"
+                            class="search-clear"
+                            title="Clear search">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="sort-container">
+                        <span class="sort-label">Sort:</span>
+                        <select v-model="sortBy" class="sort-select">
+                            <option value="category">Category</option>
+                            <option value="title">Title (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Results Info -->
+                <div v-if="searchResultsCount !== null" class="search-results-info">
+                    Found {{ searchResultsCount }} dataset{{ searchResultsCount !== 1 ? 's' : '' }} matching "{{ searchQuery }}"
+                    <button @click="clearSearch" class="btn-link">Clear search</button>
+                </div>
+
+                <!-- Filter bar -->
+                <div v-if="showFilters" class="filter-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">Filter by:</span>
+                        <button
+                            class="filter-chip"
+                            :class="{ active: filterCategory === 'all' }"
+                            @click="filterCategory = 'all'">
+                            All Datasets ({{ datasetCards.length }})
+                        </button>
+                        <button
+                            class="filter-chip"
+                            :class="{ active: filterCategory === 'medical-breast' }"
+                            @click="filterCategory = 'medical-breast'">
+                            Breast Cancer ({{ countByCategory('medical-breast') }})
+                        </button>
+                        <button
+                            class="filter-chip"
+                            :class="{ active: filterCategory === 'medical-other' }"
+                            @click="filterCategory = 'medical-other'">
+                            Medical - Other ({{ countByCategory('medical-other') }})
+                        </button>
+                        <button
+                            class="filter-chip"
+                            :class="{ active: filterCategory === 'research' }"
+                            @click="filterCategory = 'research'">
+                            Research ({{ countByCategory('research') }})
+                        </button>
+                        <button
+                            class="filter-chip"
+                            :class="{ active: filterCategory === 'surveillance' }"
+                            @click="filterCategory = 'surveillance'">
+                            Surveillance ({{ countByCategory('surveillance') }})
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Datasets grid -->
+                <div class="datasets-grid">
+                    <div
+                        v-for="dataset in filteredDatasets"
+                        :key="dataset.id"
+                        class="dataset-card"
+                        @click="showDetail(dataset.id)">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2 class="card-title">{{ dataset.title }}</h2>
+                                <p class="card-subtitle">{{ dataset.subtitle }}</p>
+                            </div>
+                            <span class="category-badge" :class="getBadgeClass(dataset.category)">
+                                {{ getCategoryLabel(dataset.category) }}
+                            </span>
+                        </div>
+
+                        <p class="card-description">{{ dataset.card.description }}</p>
+
+                        <div class="stats-grid">
+                            <div class="stat-item" v-for="(stat, index) in dataset.card.stats" :key="index">
+                                <div class="stat-label">{{ stat.label }}</div>
+                                <div class="stat-value">{{ stat.value }}</div>
+                            </div>
+                        </div>
+
+                        <div class="tags">
+                            <span class="tag" v-for="(tag, index) in dataset.card.tags" :key="index">{{ tag }}</span>
+                        </div>
+
+                        <div class="card-actions" @click.stop>
+                            <a :href="dataset.card.links.primary.url" target="_blank" class="btn btn-primary">
+                                {{ dataset.card.links.primary.text }}
+                            </a>
+                            <button class="btn btn-secondary" @click="showDetail(dataset.id)">
+                                {{ dataset.card.links.secondary.text }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer stats -->
+                <div style="text-align: center; color: var(--text-secondary); margin-top: 60px;">
+                    <p>Showing {{ filteredDatasets.length }} of {{ datasetCards.length }} datasets</p>
+                </div>
+            </div>
+
+            <!-- Detail View -->
+            <div v-else-if="currentView === 'detail'">
+                <button class="back-button" @click="showDashboard">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back to Datasets
+                </button>
+
+                <!-- Detail loading state -->
+                <div v-if="detailLoading" style="text-align: center; padding: 100px 0;">
+                    <h2>Loading dataset details...</h2>
+                    <p style="color: var(--text-secondary); margin-top: 12px;">Please wait</p>
+                </div>
+
+                <!-- Detail content -->
+                <div v-else-if="currentDataset">
+                    <!-- Detail header -->
+                    <div class="detail-header">
+                        <span
+                            v-for="badge in currentDataset.detail.header.badges"
+                            :key="badge.text"
+                            class="category-badge"
+                            :class="getBadgeClass(badge.type)">
+                            {{ badge.text }}
+                        </span>
+                        <h1 class="detail-title">{{ currentDataset.title }}</h1>
+                        <p class="detail-subtitle">{{ currentDataset.subtitle }}</p>
+                        <div class="detail-meta">
+                            <div class="meta-item" v-for="(meta, index) in currentDataset.detail.header.meta" :key="index">
+                                <div class="meta-label">{{ meta.label }}</div>
+                                <div class="meta-value">{{ meta.value }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic sections -->
+                    <div v-for="(section, index) in currentDataset.detail.sections" :key="index" class="section">
+                        <!-- Section rendering will be handled by Vue components in app.js -->
+                        <component :is="getSectionComponent(section.type)" :section="section"></component>
+                    </div>
+                </div>
+
+                <!-- Error if dataset not found -->
+                <div v-else style="text-align: center; padding: 100px 0;">
+                    <h2 style="color: var(--red);">Dataset Not Found</h2>
+                    <p style="color: var(--text-secondary); margin-top: 12px;">The requested dataset could not be loaded.</p>
+                    <button @click="showDashboard" class="btn btn-primary" style="margin-top: 20px;">Back to Datasets</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Main app script -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

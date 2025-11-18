@@ -1,0 +1,353 @@
+[
+  {
+    "id": "mendeley",
+    "title": "Breast Thermography (Mendeley)",
+    "subtitle": "Colombian Multi-Position Dataset",
+    "category": "medical-breast",
+    "card": {
+      "description": "Recent dataset from Colombia with three-position imaging (anterior, left oblique, right oblique)\nfollowing AAT protocol. Includes benign and malignant cases with pathology validation.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "357"
+        },
+        {
+          "label": "Subjects",
+          "value": "119"
+        },
+        {
+          "label": "Protocol",
+          "value": "SIT"
+        }
+      ],
+      "tags": [
+        "Breast Cancer",
+        "AAT Protocol",
+        "Pathology Validated",
+        "FLIR A300"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access Dataset",
+          "url": "https://data.mendeley.com/datasets/mhrt4svjxc/3"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "dmrir",
+    "title": "DMR-IR",
+    "subtitle": "Database for Mastology Research - Infrared",
+    "category": "medical-breast",
+    "card": {
+      "description": "The most widely used public breast thermography dataset with dynamic infrared imaging protocol.\nIncludes clinical data, mammograms, and ROI masks from 293 patients.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "5,860+"
+        },
+        {
+          "label": "Patients",
+          "value": "293"
+        },
+        {
+          "label": "Protocol",
+          "value": "DIT"
+        }
+      ],
+      "tags": [
+        "Breast Cancer",
+        "Dynamic Thermography",
+        "Clinical Data",
+        "FLIR SC-620"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access Dataset",
+          "url": "https://visual.ic.uff.br/dmi/"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "faceoral",
+    "title": "Face-Oral Temperature",
+    "subtitle": "Thermal & Visible Facial Dataset",
+    "category": "medical-other",
+    "card": {
+      "description": "Large-scale dataset combining thermal and visible facial images with oral temperature measurements\nfrom over 1,000 subjects for temperature screening research.\n",
+      "stats": [
+        {
+          "label": "Subjects",
+          "value": "1,000+"
+        },
+        {
+          "label": "Modalities",
+          "value": "2"
+        },
+        {
+          "label": "Focus",
+          "value": "Face"
+        }
+      ],
+      "tags": [
+        "Facial Thermography",
+        "Temperature Screening",
+        "Multi-Modal",
+        "PhysioNet"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access Dataset",
+          "url": "https://physionet.org/content/face-oral-temp-data/"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "iphpdt",
+    "title": "IPHPDT",
+    "subtitle": "Identity-Preserved Human Posture Detection",
+    "category": "research",
+    "card": {
+      "description": "Large-scale infrared thermal dataset for human posture detection including standing,\nsitting, lying, and bending poses with privacy preservation.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "75,000"
+        },
+        {
+          "label": "Postures",
+          "value": "4"
+        },
+        {
+          "label": "Focus",
+          "value": "Privacy"
+        }
+      ],
+      "tags": [
+        "Posture Detection",
+        "Privacy-Preserving",
+        "Large-Scale",
+        "Activity Recognition"
+      ],
+      "links": {
+        "primary": {
+          "text": "View Paper",
+          "url": "https://www.mdpi.com/1424-8220/23/1/92"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "lwirpose",
+    "title": "LWIRPOSE",
+    "subtitle": "Long-Wave Infrared Pose Dataset",
+    "category": "research",
+    "card": {
+      "description": "RGB-Thermal paired dataset designed for 2D human pose estimation research.\nFeatures nearly aligned RGB and LWIR thermal images with pose annotations.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "2,400+"
+        },
+        {
+          "label": "Type",
+          "value": "Paired"
+        },
+        {
+          "label": "Format",
+          "value": "2D Pose"
+        }
+      ],
+      "tags": [
+        "RGB-Thermal",
+        "2D Pose",
+        "Paired Dataset",
+        "LWIR"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access Dataset",
+          "url": "https://github.com/avinres/LWIRPOSE"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "openthermalpose",
+    "title": "OpenThermalPose",
+    "subtitle": "Annotated Thermal Human Pose Dataset",
+    "category": "research",
+    "card": {
+      "description": "Open-source thermal human pose estimation dataset with COCO-format annotations.\nIncludes 17 anatomical keypoints and bounding boxes for pose detection research.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "6,090"
+        },
+        {
+          "label": "Subjects",
+          "value": "31"
+        },
+        {
+          "label": "Instances",
+          "value": "14,315"
+        }
+      ],
+      "tags": [
+        "Pose Estimation",
+        "COCO Format",
+        "YOLOv8",
+        "Open Source"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access Dataset",
+          "url": "https://github.com/IS2AI/OpenThermalPose"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "openthermalpose2",
+    "title": "OpenThermalPose2",
+    "subtitle": "Extended Thermal Pose Dataset",
+    "category": "research",
+    "card": {
+      "description": "Extended version with nearly 2x more data, covering fitness exercises, multi-person activities,\nand outdoor scenarios across various weather conditions.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "11,391"
+        },
+        {
+          "label": "Subjects",
+          "value": "170"
+        },
+        {
+          "label": "Instances",
+          "value": "21,125"
+        }
+      ],
+      "tags": [
+        "Pose Estimation",
+        "YOLO11",
+        "Multi-Person",
+        "Fitness Activities"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access Dataset",
+          "url": "https://github.com/IS2AI/OpenThermalPose"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "pop",
+    "title": "POP Thermal",
+    "subtitle": "Partially Occluded Person Detection",
+    "category": "surveillance",
+    "card": {
+      "description": "UAV-based infrared thermal imaging dataset for outdoor partially occluded person detection.\nDesigned for aerial surveillance and search-and-rescue applications.\n",
+      "stats": [
+        {
+          "label": "Images",
+          "value": "8,768"
+        },
+        {
+          "label": "Platform",
+          "value": "UAV"
+        },
+        {
+          "label": "Type",
+          "value": "Outdoor"
+        }
+      ],
+      "tags": [
+        "UAV",
+        "Occlusion Detection",
+        "Outdoor",
+        "Surveillance"
+      ],
+      "links": {
+        "primary": {
+          "text": "View Paper",
+          "url": "https://www.nature.com/articles/s41597-025-04600-0"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  },
+  {
+    "id": "kaggle-thermal",
+    "title": "Thermal Human Detection",
+    "subtitle": "Kaggle YOLO Format Dataset",
+    "category": "surveillance",
+    "card": {
+      "description": "General-purpose thermal human detection dataset with YOLO-format bounding box annotations.\nSuitable for training object detection models for surveillance applications.\n",
+      "stats": [
+        {
+          "label": "Format",
+          "value": "YOLO"
+        },
+        {
+          "label": "Access",
+          "value": "Public"
+        },
+        {
+          "label": "Setup",
+          "value": "< 5 min"
+        }
+      ],
+      "tags": [
+        "YOLO Format",
+        "Easy Access",
+        "Beginner Friendly",
+        "Kaggle"
+      ],
+      "links": {
+        "primary": {
+          "text": "Access on Kaggle",
+          "url": "https://www.kaggle.com/datasets/aryashah2k/thermal-images-for-human-detection"
+        },
+        "secondary": {
+          "text": "View Details",
+          "action": "show-detail"
+        }
+      }
+    }
+  }
+]

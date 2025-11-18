@@ -1,0 +1,252 @@
+# ==============================================
+# Face-Oral Temperature Thermal Dataset
+# Large-Scale Multi-Modal Facial Temperature Screening
+# ==============================================
+
+id: "faceoral"
+title: "Face-Oral Temperature"
+subtitle: "Thermal & Visible Facial Dataset"
+category: "medical-other"
+
+# ==============================================
+# CARD DISPLAY
+# ==============================================
+card:
+  description: |
+    Large-scale dataset combining thermal and visible facial images with oral temperature measurements
+    from over 1,000 subjects for temperature screening research.
+
+  stats:
+    - label: "Subjects"
+      value: "1,000+"
+    - label: "Modalities"
+      value: "2"
+    - label: "Focus"
+      value: "Face"
+
+  tags:
+    - "Facial Thermography"
+    - "Temperature Screening"
+    - "Multi-Modal"
+    - "PhysioNet"
+
+  links:
+    primary:
+      text: "Access Dataset"
+      url: "https://physionet.org/content/face-oral-temp-data/"
+    secondary:
+      text: "View Details"
+      action: "show-detail"
+
+# ==============================================
+# DETAIL VIEW
+# ==============================================
+detail:
+  header:
+    badges:
+      - type: "medical"
+        text: "Medical - Facial Thermography"
+
+    meta:
+      - label: "Platform"
+        value: "PhysioNet"
+      - label: "Subjects"
+        value: "1,000+"
+      - label: "Modalities"
+        value: "Thermal + Visible"
+      - label: "Application"
+        value: "Fever Screening"
+
+  sections:
+    # Overview Section
+    - type: "overview"
+      title: "Overview"
+      content:
+        - type: "paragraph"
+          text: |
+            This comprehensive dataset from PhysioNet provides thermal and visible facial images paired
+            with oral temperature measurements from over 1,000 subjects. It was specifically designed for
+            developing and validating automated temperature screening systems, particularly relevant for
+            pandemic response, fever detection at entry points, and public health monitoring applications.
+
+        - type: "paragraph"
+          text: |
+            The dataset addresses the critical need for non-contact temperature screening methods by providing
+            ground truth oral temperature measurements alongside facial thermal and visible images. This
+            pairing enables researchers to develop algorithms that can accurately predict core body temperature
+            from facial thermal signatures, a crucial capability for high-throughput screening scenarios.
+
+        - type: "highlight"
+          text: |
+            **Critical Application:** This dataset became especially valuable during the
+            COVID-19 pandemic for developing contactless fever screening systems at airports, hospitals,
+            offices, and public venues. It provides the ground truth data necessary for validating
+            thermal camera accuracy for health screening.
+
+    # Dataset Specifications
+    - type: "specifications"
+      title: "Dataset Specifications"
+      params:
+        - label: "Total Subjects"
+          value: "1,000+"
+        - label: "Image Types"
+          value: "2 (Thermal+RGB)"
+        - label: "Temperature Ref"
+          value: "Oral Ground Truth"
+        - label: "Region Focus"
+          value: "Facial/Oral"
+        - label: "Diversity"
+          value: "Multi-ethnic"
+        - label: "Platform"
+          value: "PhysioNet"
+        - label: "Access"
+          value: "Open"
+        - label: "Format"
+          value: "Paired Images"
+
+    # Multi-Modal Data Collection
+    - type: "protocols"
+      title: "Multi-Modal Data Collection"
+      protocols:
+        - title: "Thermal Facial Images"
+          description: |
+            Infrared thermal images capturing facial heat signatures, particularly focusing on
+            high-temperature regions like inner canthi (eye corners), forehead, and nose area
+            which correlate with core body temperature.
+
+        - title: "Visible Light Images"
+          description: |
+            Standard RGB photographs of the same subjects, enabling facial feature detection,
+            demographic analysis, and correlation between visual appearance and thermal signatures.
+
+        - title: "Oral Temperature"
+          description: |
+            Gold-standard oral thermometer measurements taken as ground truth reference. Provides
+            accurate core body temperature for validating thermal imaging predictions.
+
+        - title: "Metadata"
+          description: |
+            Subject demographics, ambient conditions, time of measurement, and other contextual
+            information that may affect temperature readings and thermal signatures.
+
+    # Key Applications
+    - type: "list"
+      title: "Key Applications"
+      description: |
+        **Public Health Screening:**
+
+        **Infrastructure Deployment:**
+
+        **Research & Development:**
+      items:
+        - "**Fever Detection:** Identify individuals with elevated temperature at entry points"
+        - "**Mass Screening:** Non-contact temperature assessment in crowds"
+        - "**Pandemic Response:** First-line screening for infectious diseases"
+        - "**Healthcare Facilities:** Pre-screening patients and visitors"
+        - "**Airports & Borders:** International traveler screening"
+        - "**Office Buildings:** Employee health monitoring at entrances"
+        - "**Schools & Universities:** Student screening for illness"
+        - "**Event Venues:** Large gathering temperature checks"
+        - "**Algorithm Validation:** Test accuracy of thermal screening systems"
+        - "**ROI Optimization:** Identify best facial regions for temperature estimation"
+        - "**Multi-Modal Fusion:** Combine thermal and visible data for improved accuracy"
+
+    # Thermal Screening Methodology
+    - type: "list"
+      title: "Thermal Screening Methodology"
+      description: |
+        **Optimal Facial ROIs for Temperature:**
+
+        **Factors Affecting Accuracy:**
+      items:
+        - "**Inner Canthi:** Corners of eyes near nose - most reliable for core temperature"
+        - "**Forehead:** Large area, but affected by environmental factors"
+        - "**Periorbital Region:** Area around eyes with consistent thermal patterns"
+        - "**Nose Tip:** Alternative region, though more variable"
+        - "**Ambient Temperature:** Environmental conditions impact facial temperatures"
+        - "**Recent Activity:** Physical exertion elevates skin temperature"
+        - "**Facial Accessories:** Glasses, hats, scarves obstruct thermal imaging"
+        - "**Distance & Angle:** Camera positioning affects measurement accuracy"
+        - "**Skin Emissivity:** Varies with skin tone and moisture"
+
+    # Dataset Advantages
+    - type: "list"
+      title: "Dataset Advantages"
+      description: |
+        **Large Scale:**
+
+        **Ground Truth Reference:**
+
+        **Multi-Modal Data:**
+
+        **PhysioNet Platform:**
+      items:
+        - "Over 1,000 subjects provide statistical significance"
+        - "Diverse population for generalization testing"
+        - "Multiple conditions and variations captured"
+        - "Oral temperature gold standard for validation"
+        - "Quantitative accuracy assessment possible"
+        - "Enables calibration of thermal systems"
+        - "Thermal and visible images for fusion approaches"
+        - "Facial features help with region detection"
+        - "Enables demographic correlation studies"
+        - "Trusted medical research repository"
+        - "Standardized access and documentation"
+        - "Community of medical researchers"
+        - "Version control and reproducibility"
+
+    # Research Opportunities
+    - type: "list"
+      title: "Research Opportunities"
+      description: |
+        **Algorithm Development:**
+
+        **Multi-Modal Learning:**
+
+        **Clinical Studies:**
+      items:
+        - "Develop automated ROI detection for optimal temperature regions"
+        - "Create regression models for core temperature prediction"
+        - "Build classification systems for fever/no-fever detection"
+        - "Implement compensation for environmental factors"
+        - "Fuse thermal and visible data for improved accuracy"
+        - "Use facial landmarks from RGB for thermal ROI guidance"
+        - "Develop attention mechanisms focusing on relevant facial regions"
+        - "Cross-modal feature learning and domain adaptation"
+        - "Validate thermal screening sensitivity and specificity"
+        - "Study demographic variations in thermal patterns"
+        - "Analyze effect of ambient conditions on accuracy"
+        - "Develop clinical guidelines for thermal screening"
+
+    # Comparison with Other Modalities
+    - type: "table"
+      title: "Comparison with Other Modalities"
+      table:
+        headers:
+          - "Method"
+          - "Contact"
+          - "Speed"
+          - "Accuracy"
+          - "Use Case"
+        rows:
+          - ["Thermal Facial", "❌ Non-contact", "✅ Fast (instant)", "⚠️ Moderate", "Mass screening"]
+          - ["Oral Thermometer", "✅ Contact", "⚠️ Slow (30-60s)", "✅ High", "Clinical gold standard"]
+      note:
+        type: "highlight"
+        text: |
+          **Important Note:** Thermal screening is a preliminary tool for identifying
+          potentially febrile individuals. Positive thermal screens should be confirmed with
+          clinical-grade thermometers. This dataset helps understand the correlation and limitations
+          of thermal screening.
+
+    # Access & Resources
+    - type: "links"
+      title: "Access & Resources"
+      links:
+        - text: "PhysioNet Repository - Official Access"
+          url: "https://physionet.org/content/face-oral-temp-data/"
+      note:
+        type: "highlight"
+        text: |
+          **Citation:** Please cite the PhysioNet dataset when using this data for research.
+          PhysioNet is a trusted medical research repository with standardized access and documentation.

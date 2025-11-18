@@ -1,0 +1,237 @@
+# ==============================================
+# OpenThermalPose Dataset
+# Open-Source Annotated Thermal Human Pose Dataset
+# ==============================================
+
+id: "openthermalpose"
+title: "OpenThermalPose"
+subtitle: "Annotated Thermal Human Pose Dataset"
+category: "research"
+
+# ==============================================
+# CARD DISPLAY
+# ==============================================
+card:
+  description: |
+    Open-source thermal human pose estimation dataset with COCO-format annotations.
+    Includes 17 anatomical keypoints and bounding boxes for pose detection research.
+
+  stats:
+    - label: "Images"
+      value: "6,090"
+    - label: "Subjects"
+      value: "31"
+    - label: "Instances"
+      value: "14,315"
+
+  tags:
+    - "Pose Estimation"
+    - "COCO Format"
+    - "YOLOv8"
+    - "Open Source"
+
+  links:
+    primary:
+      text: "Access Dataset"
+      url: "https://github.com/IS2AI/OpenThermalPose"
+    secondary:
+      text: "View Details"
+      action: "show-detail"
+
+# ==============================================
+# DETAIL VIEW
+# ==============================================
+detail:
+  header:
+    badges:
+      - type: "research"
+        text: "Research - Pose Estimation"
+
+    meta:
+      - label: "Institution"
+        value: "IS2AI Lab, Nazarbayev University"
+      - label: "Year Released"
+        value: "2024"
+      - label: "License"
+        value: "Open Source"
+      - label: "GitHub"
+        value: "IS2AI/OpenThermalPose"
+
+  sections:
+    # Overview Section
+    - type: "overview"
+      title: "Overview"
+      content:
+        - type: "paragraph"
+          text: |
+            OpenThermalPose is a pioneering open-source thermal human pose estimation dataset that addresses
+            critical challenges in computer vision, particularly insufficient illumination and privacy concerns
+            that plague visible-domain pose estimation systems.
+
+        - type: "paragraph"
+          text: |
+            The dataset was created by the Intelligent Systems and Signal Processing (IS2AI) Laboratory at
+            Nazarbayev University, Kazakhstan. It provides comprehensive annotations following the MS COCO
+            keypoint format, making it immediately compatible with existing pose estimation frameworks and models.
+
+        - type: "highlight"
+          text: |
+            **Key Innovation:** First major open-source thermal pose dataset with comprehensive
+            COCO-format annotations, enabling privacy-preserving human pose estimation that works in
+            complete darkness and challenging lighting conditions.
+
+    # Dataset Specifications
+    - type: "specifications"
+      title: "Dataset Specifications"
+      params:
+        - label: "Total Images"
+          value: "6,090"
+        - label: "Subjects"
+          value: "31"
+        - label: "Annotated Instances"
+          value: "14,315"
+        - label: "Keypoints"
+          value: "17 anatomical"
+        - label: "Annotation Format"
+          value: "MS COCO"
+        - label: "Bounding Boxes"
+          value: "14,315"
+        - label: "Activity Types"
+          value: "Multiple"
+        - label: "Image Format"
+          value: "PNG"
+
+    # 17 COCO Keypoint Annotations
+    - type: "protocols"
+      title: "17 COCO Keypoint Annotations"
+      description: |
+        Each human instance is annotated with 17 anatomical keypoints following the MS COCO format:
+
+        This standardized format ensures compatibility with popular frameworks like YOLOv8-pose,
+        YOLO11-pose, and other COCO-based pose estimation models.
+      protocols:
+        - title: "Upper Body (5)"
+          description: "Nose, Left Eye, Right Eye, Left Ear, Right Ear"
+
+        - title: "Shoulders (2)"
+          description: "Left Shoulder, Right Shoulder"
+
+        - title: "Arms (4)"
+          description: "Left Elbow, Right Elbow, Left Wrist, Right Wrist"
+
+        - title: "Core & Legs (6)"
+          description: "Left Hip, Right Hip, Left Knee, Right Knee, Left Ankle, Right Ankle"
+
+    # Dataset Coverage
+    - type: "list"
+      title: "Dataset Coverage"
+      description: "The dataset captures diverse scenarios to ensure model robustness:"
+      items:
+        - "**Fitness Exercises:** Various workout poses and movements"
+        - "**Multi-Person Scenes:** Multiple humans interacting in single frames"
+        - "**Outdoor Walking:** Natural gait and movement patterns"
+        - "**Different Locations:** Indoor and outdoor environments"
+        - "**Weather Conditions:** Various ambient temperature scenarios"
+        - "**Lighting Conditions:** From complete darkness to daylight"
+        - "**Occlusion Scenarios:** Partial body occlusions and challenging poses"
+
+    # Baseline Models & Performance
+    - type: "table"
+      title: "Baseline Models & Performance"
+      description: "The authors provide pre-trained YOLOv8-pose models as baselines:"
+      table:
+        headers:
+          - "Model"
+          - "Size"
+          - "Parameters"
+          - "Use Case"
+        rows:
+          - ["YOLOv8n-pose", "Nano", "~3.2M", "Edge devices, mobile"]
+          - ["YOLOv8s-pose", "Small", "~11.6M", "Balanced performance"]
+          - ["YOLOv8m-pose", "Medium", "~26.4M", "Higher accuracy"]
+          - ["YOLOv8l-pose", "Large", "~43.7M", "Best accuracy"]
+          - ["YOLOv8x-pose", "X-Large", "~68.9M", "Maximum performance"]
+      note:
+        type: "highlight"
+        text: "All models are trained from scratch on the thermal dataset and are available for download with full training configurations."
+
+    # Applications
+    - type: "protocols"
+      title: "Applications"
+      description: "The dataset enables various privacy-preserving and low-light applications:"
+      protocols:
+        - title: "Healthcare"
+          description: "Patient monitoring, fall detection, rehabilitation assessment without compromising privacy"
+
+        - title: "Human-Robot Interaction"
+          description: "Robot navigation in human environments, collaborative robotics, gesture recognition"
+
+        - title: "Sports Analytics"
+          description: "Athlete performance analysis, movement quality assessment, training optimization"
+
+        - title: "Security & Surveillance"
+          description: "Privacy-preserving monitoring, night-time surveillance, intrusion detection"
+
+        - title: "Augmented Reality"
+          description: "Low-light AR experiences, thermal-based interaction, environmental adaptation"
+
+        - title: "Motion Capture"
+          description: "Game development, animation, biomechanics research without markers"
+
+    # Technical Implementation
+    - type: "list"
+      title: "Technical Implementation"
+      description: |
+        **Dataset Structure:**
+
+        **Easy Integration:**
+      items:
+        - "**Train/Val/Test Split:** Standard splits provided"
+        - "**Image Format:** PNG (lossless thermal image storage)"
+        - "**Label Format:** TXT files (YOLO format) and JSON (COCO format)"
+        - "**YAML Configuration:** Ready-to-use training configuration files"
+        - "The dataset can be directly used with Ultralytics YOLO framework. Simply point to the provided YAML file and start training"
+
+    # Access & Resources
+    - type: "links"
+      title: "Access & Resources"
+      description: |
+        **GitHub Repository:**
+
+        **What's Included:**
+        - Complete annotated dataset (train/val/test)
+        - Pre-trained YOLOv8-pose models (all sizes)
+        - Training scripts and configuration files
+        - Evaluation metrics and benchmarks
+        - Documentation and usage examples
+        - Data loading utilities
+      links:
+        - text: "Official GitHub Repository"
+          url: "https://github.com/IS2AI/OpenThermalPose"
+        - text: "IEEE FG 2024 Paper"
+          url: "https://ieeexplore.ieee.org/document/10581992"
+      note:
+        type: "highlight"
+        text: |
+          **Citation:** Kuzdeuov, A., Taratynova, D., Tleuliyev, A., & Varol, H. A. (2024).
+          OpenThermalPose: An Open-Source Annotated Thermal Human Pose Dataset and Initial YOLOv8-Pose Baselines.
+          IEEE FG 2024. DOI: 10.1109/FG59268.2024.10581992
+
+    # Advantages & Future Extensions
+    - type: "list"
+      title: "Advantages & Future Extensions"
+      description: |
+        **Key Advantages:**
+
+        **See Also: OpenThermalPose2**
+
+        An extended version (OpenThermalPose2) is now available with 11,391 images of 170 subjects and
+        21,125 annotated instances—nearly double the original dataset size with even more diverse poses
+        and scenarios.
+      items:
+        - "**Privacy-Preserving:** Thermal imaging obscures facial features and identity"
+        - "**Illumination-Invariant:** Works equally well in darkness and bright light"
+        - "**Open Source:** Free access to data, code, and models"
+        - "**Standard Format:** COCO compatibility enables wide framework support"
+        - "**Diverse Scenarios:** Multiple activities, locations, and conditions"
+        - "**Ready-to-Use:** Pre-trained models and complete pipeline provided"

@@ -1,0 +1,301 @@
+# ============================================
+# THERMAL DATASET DISCOVERY - DATASET TEMPLATE
+# ============================================
+#
+# INSTRUCTIONS:
+# 1. Copy this template to data/datasets/your-dataset-id.yaml
+# 2. Fill in all required fields (marked with *)
+# 3. Optional fields can be omitted or set to null
+# 4. Follow the examples for each field type
+# 5. Test your YAML syntax before committing
+#
+# TIPS:
+# - Use lowercase-with-dashes for IDs (e.g., "my-dataset-name")
+# - Keep card descriptions concise (2-3 sentences max)
+# - Use markdown in content sections (**bold**, _italic_, [link](url))
+# - Stats display: 1 stat = centered, 2 stats = 2 columns, 3 stats = 3-column grid
+# - Section order matters - organize logically for readers
+#
+# ============================================
+
+# ==============================================
+# CORE METADATA (Required)
+# ==============================================
+id: "your-dataset-id"                    # * Unique ID (lowercase-with-dashes, URL-safe)
+title: "Your Dataset Name"               # * Display title (appears in cards and detail view)
+subtitle: "Short descriptive subtitle"   # * Appears under title in cards and headers
+category: "research"                     # * Options: medical-breast, medical-other, research, surveillance
+
+# ==============================================
+# CARD DISPLAY (Dashboard Grid View)
+# ==============================================
+card:
+  description: |                         # * Brief description (2-3 sentences, supports markdown)
+    Brief description of the dataset. What makes it unique or valuable for research.
+    Keep this concise and engaging to attract users on the dashboard.
+
+  stats:                                 # * Array of 1-3 statistics (more than 3 = only first 3 shown)
+    - label: "Images"                    # * Stat label (short, 1-2 words)
+      value: "1,000+"                    # * Stat value (can include +, units, abbreviations)
+
+    - label: "Subjects"                  # Optional second stat
+      value: "100"
+
+    # Uncomment for third stat:
+    # - label: "Protocol"
+    #   value: "SIT"
+
+  tags:                                  # * Array of 3-6 descriptive tags
+    - "Tag Category 1"
+    - "Tag Category 2"
+    - "Specific Feature"
+    - "Camera Model"
+    # Add 2-3 more tags as relevant
+
+  links:
+    primary:                             # * Primary action button
+      text: "Access Dataset"             # Button text (e.g., "Access Dataset", "View Paper", "Download")
+      url: "https://example.com/dataset" # External URL to dataset or paper
+
+    secondary:                           # * Secondary button (always triggers detail view)
+      text: "View Details"               # Keep as "View Details" for consistency
+      action: "show-detail"              # Fixed value - do not change
+
+# ==============================================
+# DETAIL VIEW
+# ==============================================
+detail:
+  header:
+    badges:                              # * 1-2 category badges
+      - type: "research"                 # * Options: medical, research, surveillance
+        text: "Research - Pose Estimation" # * Badge display text
+
+    meta:                                # * 2-4 metadata items
+      - label: "Institution"
+        value: "University Name, Country"
+
+      - label: "Year Released"
+        value: "2024"
+
+      - label: "License"
+        value: "Open Access / MIT / etc."
+
+      # Optional 4th metadata item:
+      # - label: "Access"
+      #   value: "Public / Restricted / Upon Request"
+
+  # ==============================================
+  # SECTIONS (Flexible Array)
+  # ==============================================
+  # You can include any combination of these section types in any order.
+  # At minimum, include: 1 overview, 1 specifications, and 1 links section.
+  # ==============================================
+
+  sections:
+
+    # ---------------------------------------------
+    # SECTION TYPE 1: Overview (Narrative Text)
+    # ---------------------------------------------
+    # Use for: Introduction, background, context, key achievements
+    # Features: Paragraphs with markdown + optional highlight boxes
+    # ---------------------------------------------
+    - type: "overview"
+      title: "Overview"                  # Section heading
+      content:
+        - type: "paragraph"
+          text: |
+            Main description paragraph explaining what the dataset is, why it was created,
+            and what makes it unique. You can use **bold text**, _italics_, and [links](https://example.com).
+
+            Supports multiple lines and proper paragraph formatting.
+
+        - type: "paragraph"
+          text: |
+            Second paragraph with additional context. Who created it? What institution?
+            What research goals does it serve?
+
+        - type: "highlight"              # Optional colored callout box
+          text: |
+            **Key Achievement:** Notable result, citation count, or important use case.
+            Use this sparingly to highlight the most important information.
+
+    # ---------------------------------------------
+    # SECTION TYPE 2: Specifications (Parameter Grid)
+    # ---------------------------------------------
+    # Use for: Dataset statistics, technical specs, quantitative details
+    # Features: Responsive grid of parameter cards (auto-fits 200px+ columns)
+    # ---------------------------------------------
+    - type: "specifications"
+      title: "Dataset Specifications"
+      params:                            # Array of 4-12 parameter cards
+        - label: "Total Images"          # Parameter label (short)
+          value: "10,000"                # Parameter value (can be number, text, etc.)
+
+        - label: "Total Subjects"
+          value: "500"
+
+        - label: "Camera Model"
+          value: "FLIR A300"
+
+        - label: "Resolution"
+          value: "640 × 480"
+
+        - label: "Format"
+          value: "PNG, CSV"
+
+        - label: "Annotations"
+          value: "COCO Format"
+
+        # Add more as needed (up to ~12 for good visual balance)
+
+    # ---------------------------------------------
+    # SECTION TYPE 3: Protocols (Protocol Steps)
+    # ---------------------------------------------
+    # Use for: Data collection methodology, imaging protocols, workflow steps
+    # Features: Grid of 2-4 numbered protocol cards
+    # ---------------------------------------------
+    - type: "protocols"
+      title: "Data Collection Protocol"
+      description: |                     # Optional introductory text
+        Brief explanation of the overall protocol or methodology used.
+        This appears before the protocol cards.
+
+      protocols:                         # Array of 2-4 protocol steps
+        - title: "Step 1: Preparation"
+          description: |
+            Describe the first step in detail. What happens? What equipment is used?
+            What conditions are maintained?
+
+        - title: "Step 2: Image Acquisition"
+          description: |
+            Describe the image capture process. How many images? What intervals?
+            Any specific camera settings or environmental controls?
+
+        - title: "Step 3: Annotation"
+          description: |
+            How were annotations created? Manual vs automated? What annotation format?
+
+        # Optional 4th step:
+        # - title: "Step 4: Validation"
+        #   description: "How was data quality validated?"
+
+    # ---------------------------------------------
+    # SECTION TYPE 4: List (Bulleted Content)
+    # ---------------------------------------------
+    # Use for: Dataset contents, features, capabilities, requirements
+    # Features: Bulleted list with markdown support
+    # ---------------------------------------------
+    - type: "list"
+      title: "Dataset Contents"
+      description: null                  # Optional intro text (can be omitted)
+      items:
+        - "**Thermal Images:** Description of the thermal image data included"
+        - "**RGB Images:** If paired dataset, describe RGB component"
+        - "**Annotations:** COCO format keypoints, bounding boxes, segmentation masks, etc."
+        - "**Metadata:** CSV files with subject demographics, environmental conditions, etc."
+        - "**Documentation:** README files, data dictionaries, usage guidelines"
+        # Add more as needed
+
+    # ---------------------------------------------
+    # SECTION TYPE 5: Table (Comparison/Results)
+    # ---------------------------------------------
+    # Use for: Benchmark results, performance comparisons, published studies
+    # Features: Responsive table with header row
+    # ---------------------------------------------
+    - type: "table"
+      title: "Benchmark Results"
+      description: |
+        Performance of various models evaluated on this dataset:
+
+      table:
+        headers:                         # Column headers
+          - "Model"
+          - "Method"
+          - "Metric"
+          - "Performance"
+
+        rows:                            # Data rows (array of arrays)
+          - ["YOLOv8", "Object Detection", "mAP@50", "92.5%"]
+          - ["ResNet-50", "Classification", "Accuracy", "88.3%"]
+          - ["Custom Model", "Segmentation", "IoU", "0.87"]
+          # Add more rows as needed
+
+      note:                              # Optional highlight note after table
+        type: "highlight"
+        text: |
+          **Note:** All results use the standard train/test split. Cross-validation
+          results may vary.
+
+    # ---------------------------------------------
+    # SECTION TYPE 6: Links (Resources & Access)
+    # ---------------------------------------------
+    # Use for: Dataset links, papers, documentation, related resources
+    # Features: Link list with optional highlight box
+    # ---------------------------------------------
+    - type: "links"
+      title: "Access & Resources"
+      description: "Where to access this dataset:"  # Optional intro
+
+      links:
+        - text: "Official Dataset Repository"
+          url: "https://github.com/username/dataset"
+
+        - text: "Research Paper (arXiv)"
+          url: "https://arxiv.org/abs/..."
+
+        - text: "Documentation & User Guide"
+          url: "https://example.com/docs"
+
+        # Add more links as needed
+
+      note:                              # Optional citation/usage note
+        type: "highlight"
+        text: |
+          **Citation:** If you use this dataset in your research, please cite:
+          Author et al., "Paper Title," Conference/Journal, Year.
+
+    # ---------------------------------------------
+    # ADDITIONAL LIST SECTION EXAMPLE
+    # ---------------------------------------------
+    # You can add multiple sections of the same type
+    # Common pattern: Overview → Specs → Protocols → Contents → Results → Links → Limitations
+    # ---------------------------------------------
+    - type: "list"
+      title: "Limitations & Considerations"
+      items:
+        - "**Sample Size:** Limited to X subjects from Y geographic region"
+        - "**Temporal Scope:** Data collected during single time period"
+        - "**Annotation Quality:** Manual annotations may have inter-rater variability"
+        - "**Environmental Conditions:** Indoor/outdoor only, specific weather conditions"
+        # Add relevant limitations for transparency
+
+# ============================================
+# VALIDATION CHECKLIST
+# ============================================
+# Before committing your YAML file, verify:
+# ☐ ID is unique and lowercase-with-dashes
+# ☐ All required (*) fields are filled
+# ☐ Stats count is 1-3 (if more than 3, only first 3 will display)
+# ☐ Tags are relevant and concise (3-6 tags)
+# ☐ At least one overview section exists
+# ☐ At least one specifications section exists
+# ☐ At least one links section with dataset access exists
+# ☐ All URLs are valid and accessible
+# ☐ Markdown formatting is correct (test bold, links, etc.)
+# ☐ YAML syntax is valid (no tabs, proper indentation)
+# ☐ File is saved in data/datasets/ with .yaml extension
+# ============================================
+
+# ============================================
+# TESTING YOUR YAML
+# ============================================
+# Option 1: Online YAML validator
+# - https://www.yamllint.com/
+# - Paste your YAML and check for syntax errors
+#
+# Option 2: Command line (Python)
+# python3 -c "import yaml; yaml.safe_load(open('data/datasets/your-file.yaml'))"
+#
+# Option 3: Command line (Node.js with js-yaml)
+# node -e "const yaml = require('js-yaml'); const fs = require('fs'); yaml.load(fs.readFileSync('data/datasets/your-file.yaml', 'utf8'));"
+# ============================================

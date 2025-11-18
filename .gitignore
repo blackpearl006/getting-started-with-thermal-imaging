@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts (if you add a build process later)
+dist/
+build/
+
+# Environment files (if you add any)
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Coverage (if you add testing)
+coverage/
+.nyc_output/
+
+# Optional: Original HTML (if you want to keep YAML/JSON only in repo)
+# thermal-dataset-discovery.html
