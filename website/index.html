@@ -342,6 +342,55 @@
             font-weight: 500;
         }
 
+        footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 0.5px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .last-updated {
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+
+        .last-updated strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .footer-note {
+            font-size: 0.8125rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--text-primary);
+        }
+
         @media (max-width: 768px) {
             .datasets-grid {
                 grid-template-columns: 1fr;
@@ -772,6 +821,29 @@
 
             <p><strong>Additional Resources:</strong> For medical body-part thermal imaging beyond breast (e.g., limbs, arthritis, inflammation), additional database searches may be required as public availability is more limited.</p>
         </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="last-updated">
+                    <strong>Last Updated:</strong> July 2026
+                </div>
+                <div class="footer-note">
+                    This dataset discovery page was curated in July 2026. Dataset links, availability, and access requirements may have changed since then. If you encounter broken links or outdated information, please consider contributing an update to keep this resource current for the research community.
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/blackpearl006/getting-started-with-thermal-imaging" target="_blank" class="footer-link">
+                        View on GitHub
+                    </a>
+                    <a href="https://github.com/blackpearl006/getting-started-with-thermal-imaging/issues" target="_blank" class="footer-link">
+                        Report an Issue
+                    </a>
+                    <a href="https://github.com/blackpearl006/getting-started-with-thermal-imaging/blob/main/CONTRIBUTING.md" target="_blank" class="footer-link">
+                        Contribute
+                    </a>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
